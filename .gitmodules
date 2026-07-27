@@ -1,0 +1,6 @@
+[submodule "XenonRecomp-Skate-3"]
+	path = XenonRecomp-Skate-3
+	url = https://github.com/rbaucells/XenonRecomp-Skate-3.git
+[submodule "XenosRecomp-Skate-3"]
+	path = XenosRecomp-Skate-3
+	url = https://github.com/rbaucells/XenosRecomp-Skate-3.git
