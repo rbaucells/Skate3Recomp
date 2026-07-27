@@ -28,7 +28,9 @@ add_custom_command(
         USES_TERMINAL
 )
 
-add_executable(Skate3Recomp main.cpp ${SKATE3_PPC_FILES})
+file(GLOB ./Skate3Recomp/*.cpp SKATE3_RECOMP_FILES)
+
+add_executable(Skate3Recomp main.cpp ${SKATE3_RECOMP_FILES} ${SKATE3_PPC_FILES})
 
 #target_include_directories(Skate3Recomp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(Skate3Recomp PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/XenonRecomp-Skate-3/thirdparty/simde")
