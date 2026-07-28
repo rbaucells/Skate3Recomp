@@ -1,37 +1,33 @@
 cmake_minimum_required(VERSION 4.2)
 project(Skate3Recomp)
 
+if(NOT VCPKG_ROOT)
+    set(VCPKG_ROOT "${CMAKE_SOURCE_DIR}/thirdparty/vcpkg")
+endif()
+if(NOT CMAKE_TOOLCHAIN_FILE)
+    set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "vcpkg toolchain file")
+endif()
+
 set(CMAKE_CXX_STANDARD 20)
 
-# xenon and xenos recomp
-add_subdirectory(XenonRecomp-Skate-3)
-add_subdirectory(XenosRecomp-Skate-3)
+set(SKATE3_RECOMP_TOOLS "${CMAKE_SOURCE_DIR}/tools")
+set(SKATE3_RECOMP_THIRDPARTY "${CMAKE_SOURCE_DIR}/thirdparty")
+set(SKATE3_RECOMP_CONFIG "${CMAKE_SOURCE_DIR}/config")
+set(SKATE3_RECOMP_OUT "${CMAKE_SOURCE_DIR}/out")
 
-# get skate 3 ppc files locations
-set(SKATE3_PPC_FILES
-        "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/ppc_config.h"
-        "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/ppc_context.h"
-        "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/ppc_func_mapping.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/ppc_recomp_shared.h"
-)
+if(APPLE)
+    enable_language(OBJC)
+    enable_language(OBJCXX)
+endif ()
 
-foreach(i RANGE 0 275)
-    list(APPEND SKATE3_PPC_FILES "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/ppc_recomp.${i}.cpp")
-endforeach()
+# thirdparty dependencies
+add_subdirectory(thirdparty)
 
-# generate them if they dont exist
-add_custom_command(
-        OUTPUT ${SKATE3_PPC_FILES}
-        COMMAND "$<TARGET_FILE:XenonRecomp>" "${CMAKE_CURRENT_SOURCE_DIR}/config/toml.toml" "${CMAKE_CURRENT_SOURCE_DIR}/XenonRecomp-Skate-3/XenonUtils/ppc_context.h"
-        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/skate-3/default.xex"
-        COMMENT "Generating skate 3 ppc files"
-        USES_TERMINAL
-)
+# tools
+add_subdirectory(tools)
 
-file(GLOB ./Skate3Recomp/*.cpp SKATE3_RECOMP_FILES)
+# main library
+add_subdirectory(Skate3RecompLib)
 
-add_executable(Skate3Recomp main.cpp ${SKATE3_RECOMP_FILES} ${SKATE3_PPC_FILES})
-
-#target_include_directories(Skate3Recomp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(Skate3Recomp PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/XenonRecomp-Skate-3/thirdparty/simde")
-target_precompile_headers(Skate3Recomp PUBLIC "out/ppc/ppc_recomp_shared.h")
+# main executable
+add_subdirectory(Skate3Recomp)

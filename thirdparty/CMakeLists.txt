@@ -1,0 +1,31 @@
+cmake_policy(SET CMP0077 NEW)
+
+set(MSDF_ATLAS_BUILD_STANDALONE OFF)
+set(MSDF_ATLAS_USE_SKIA OFF)
+set(MSDF_ATLAS_NO_ARTERY_FONT ON)
+set(MSDFGEN_DISABLE_PNG ON)
+
+set(SDL2MIXER_DEPS_SHARED OFF)
+set(SDL2MIXER_VENDORED ON)
+set(SDL2MIXER_FLAC OFF)
+set(SDL2MIXER_MOD OFF)
+set(SDL2MIXER_MP3 OFF)
+set(SDL2MIXER_MIDI OFF)
+set(SDL2MIXER_OPUS OFF)
+set(SDL2MIXER_VORBIS "VORBISFILE")
+set(SDL2MIXER_WAVPACK OFF)
+
+if (WIN32)
+    set(D3D12_AGILITY_SDK_ENABLED ON CACHE BOOL "")
+endif()
+
+add_subdirectory(msdf-atlas-gen)
+add_subdirectory(nativefiledialog-extended)
+add_subdirectory(o1heap)
+add_subdirectory(SDL)
+add_subdirectory(SDL_mixer)
+add_subdirectory(plume)
+
+if (APPLE)
+    add_subdirectory(MoltenVK)
+endif()

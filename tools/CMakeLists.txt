@@ -1,0 +1,6 @@
+add_subdirectory(bc_diff)
+add_subdirectory(file_to_c)
+add_subdirectory(fshasher)
+add_subdirectory(x_decompress)
+add_subdirectory(XenonRecomp-Skate-3)
+add_subdirectory(XenosRecomp-Skate-3)
