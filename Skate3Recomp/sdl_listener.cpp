@@ -1,4 +1,6 @@
-#include "misc/sdl_listener.h"
+#include "sdl_listener.h"
+
+#include <vector>
 
 std::vector<ISDLEventListener*>& GetEventListeners()
 {

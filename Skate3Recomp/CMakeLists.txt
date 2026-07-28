@@ -229,7 +229,7 @@ target_link_libraries(Skate3Recomp PRIVATE
         nfd::nfd
         o1heap
         XenonUtils
-        SDL3::SDL3-static
+        SDL2::SDL2-static
         SDL2_mixer
         tomlplusplus::tomlplusplus
         Skate3RecompLib
@@ -238,7 +238,7 @@ target_link_libraries(Skate3Recomp PRIVATE
         plume
 )
 
-target_include_directories(Skate3Recomp PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${SKATE3_RECOMP_THIRDPARTY_INCLUDES})
+target_include_directories(Skate3Recomp PRIVATE "${SKATE3_RECOMP_LIB}/out" ${CMAKE_CURRENT_SOURCE_DIR} ${SKATE3_RECOMP_THIRDPARTY_INCLUDES})
 
 # precompile headers
 #target_precompile_headers(Skate3Recomp PUBLIC ${SKATE3_RECOMP_PRECOMPILED_HEADERS})

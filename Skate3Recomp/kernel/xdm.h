@@ -2,6 +2,8 @@
 
 #include "heap.h"
 #include "memory.h"
+#include "xbox.h"
+#include <cassert>
 
 #define OBJECT_SIGNATURE           (uint32_t)'XBOX'
 #define GUEST_INVALID_HANDLE_VALUE 0xFFFFFFFF

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "mutex.h"
+#include "o1heap.h"
 
 struct Heap
 {

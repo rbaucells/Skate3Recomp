@@ -1,4 +1,4 @@
-#include "misc/preload_executable.h"
+#include "preload_executable.h"
 #include <os/logger.h>
 
 // Code from Zelda 64: Recompiled
