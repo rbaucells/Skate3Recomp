@@ -52,3 +52,6 @@
 [submodule "thirdparty/plume"]
 	path = thirdparty/plume
 	url = https://github.com/renderbag/plume.git
+[submodule "Skate3RecompResources"]
+	path = Skate3RecompResources
+	url = https://github.com/rbaucells/Skate3RecompResources.git

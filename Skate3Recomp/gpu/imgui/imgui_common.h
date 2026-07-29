@@ -15,6 +15,8 @@
 
 #ifdef __cplusplus
 
+#include <cstdint>
+
 enum class ImGuiCallback : int32_t
 {
     SetGradient = -1,

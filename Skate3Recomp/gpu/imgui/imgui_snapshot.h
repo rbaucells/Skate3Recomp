@@ -4,6 +4,12 @@
 // You also need to do this if you are testing localization, as only
 // characters in the locale get added to the atlas.
 #define ENABLE_IM_FONT_ATLAS_SNAPSHOT
+#include <vector>
+
+#include "ankerl/unordered_dense.h"
+#include <cstdint>
+
+#include "imgui.h"
 
 struct ImFontAtlasSnapshot
 {

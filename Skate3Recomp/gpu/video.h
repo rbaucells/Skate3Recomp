@@ -6,6 +6,10 @@
 
 #include <plume_render_interface.h>
 
+#include "mutex.h"
+#include "xbox.h"
+#include "xxhash.h"
+
 #define D3DCLEAR_TARGET  0x1
 #define D3DCLEAR_ZBUFFER 0x10
 

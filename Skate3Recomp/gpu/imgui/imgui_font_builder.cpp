@@ -3,6 +3,7 @@
 #include <msdf-atlas-gen/msdf-atlas-gen.h>
 
 #include "imgui.h"
+#include "imgui_internal.h"
 
 // Taken directly from msdf-atlas-gen, modified to support custom rectangles.
 struct TightAtlasPacker {

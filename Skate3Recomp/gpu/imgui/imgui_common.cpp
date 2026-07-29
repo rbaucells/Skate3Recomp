@@ -1,5 +1,9 @@
 #include "imgui_common.h"
 
+#include <vector>
+#include <memory>
+#include "imgui.h"
+
 static std::vector<std::unique_ptr<ImGuiCallbackData>> g_callbackData;
 static uint32_t g_callbackDataIndex = 0;
 
