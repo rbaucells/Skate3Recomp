@@ -3,6 +3,7 @@
 #include "memory.h"
 #include "function.h"
 
+// TODO: Might be sonic unleashed specific?
 constexpr size_t RESERVED_BEGIN = 0x7FEA0000;
 constexpr size_t RESERVED_END = 0xA0000000;
 
@@ -119,6 +120,7 @@ void XFreeMem(uint32_t baseAddress, uint32_t flags)
         g_userHeap.Free(g_memory.Translate(baseAddress));
 }
 
+// TODO: Replace with real skate 3 locations
 GUEST_FUNCTION_STUB(sub_82BD7788); // HeapCreate
 GUEST_FUNCTION_STUB(sub_82BD9250); // HeapDestroy
 

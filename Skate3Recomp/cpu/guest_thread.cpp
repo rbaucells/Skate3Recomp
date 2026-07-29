@@ -238,6 +238,7 @@ uint32_t SetThreadIdealProcessorImpl(GuestThreadHandle* hThread, uint32_t dwIdea
     return 0;
 }
 
+// TODO: Replace with real skate 3 locations
 GUEST_FUNCTION_HOOK(sub_82DFA2E8, SetThreadNameImpl);
 GUEST_FUNCTION_HOOK(sub_82BD57A8, GetThreadPriorityImpl);
 GUEST_FUNCTION_HOOK(sub_82BD5910, SetThreadIdealProcessorImpl);
