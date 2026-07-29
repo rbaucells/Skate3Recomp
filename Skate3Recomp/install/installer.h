@@ -1,20 +1,25 @@
 #pragma once
 
+#include <list>
 #include <span>
 #include <set>
+#include <filesystem>
+#include <string>
 
 #include "virtual_file_system.h"
 #include <xex_patcher.h>
 
 enum class DLC {
     Unknown,
-    Spagonia,
-    Chunnan,
-    Mazuri,
-    Holoska,
-    ApotosShamar,
-    EmpireCityAdabat,
-    Count = EmpireCityAdabat
+    AfterDark,
+    BlackBoxSkatePark,
+    HawaiianDream,
+    MaloofMoneyCup,
+    SanVanPartyPack,
+    SkateSharePack,
+    SkateCreateUpgradePack,
+    TimeIsMoneyPack,
+    Count = TimeIsMoneyPack
 };
 
 struct Journal
@@ -62,6 +67,7 @@ struct Installer
         std::span<const FilePair> filePairs;
         const uint64_t *fileHashes = nullptr;
         std::string targetSubDirectory;
+        std::string validationFile;
     };
 
     struct Sources 

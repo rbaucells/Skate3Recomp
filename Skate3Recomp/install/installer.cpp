@@ -1,32 +1,38 @@
 #include "installer.h"
 
+#include <thread>
 #include <xxh3.h>
 
 #include "directory_file_system.h"
 #include "iso_file_system.h"
 #include "xcontent_file_system.h"
 
-#include "hashes/apotos_shamar.h"
-#include "hashes/chunnan.h"
-#include "hashes/empire_city_adabat.h"
 #include "hashes/game.h"
-#include "hashes/holoska.h"
-#include "hashes/mazuri.h"
-#include "hashes/spagonia.h"
 #include "hashes/update.h"
+#include "hashes/after_dark.h"
+#include "hashes/black_box.h"
+#include "hashes/danny_way.h"
+#include "hashes/maloof_money_cup.h"
+#include "hashes/san_van_party.h"
+#include "hashes/skate_share.h"
+#include "hashes/skate_create.h"
+#include "hashes/time_is_money.h"
+
+#include "fmt/core.h"
 
 static const std::string GameDirectory = "game";
 static const std::string DLCDirectory = "dlc";
 static const std::string PatchedDirectory = "patched";
-static const std::string ApotosShamarDirectory = DLCDirectory + "/Apotos & Shamar Adventure Pack";
-static const std::string ChunnanDirectory = DLCDirectory + "/Chun-nan Adventure Pack";
-static const std::string EmpireCityAdabatDirectory = DLCDirectory + "/Empire City & Adabat Adventure Pack";
-static const std::string HoloskaDirectory = DLCDirectory + "/Holoska Adventure Pack";
-static const std::string MazuriDirectory = DLCDirectory + "/Mazuri Adventure Pack";
-static const std::string SpagoniaDirectory = DLCDirectory + "/Spagonia Adventure Pack";
+static const std::string AfterDarkDirectory = DLCDirectory + "/After Dark";
+static const std::string BlackBoxSkateParkDirectory = DLCDirectory + "/Black Box Skate Park";
+static const std::string HawaiianDreamDirectory = DLCDirectory + "/Hawaiian Dream";
+static const std::string MaloofMoneyCupDirectory = DLCDirectory + "/Maloof Money Cup";
+static const std::string SanVanPartyPackDirectory = DLCDirectory + "/San Van Party Pack";
+static const std::string SkateSharePackDirectory = DLCDirectory + "/Skate Share Pack";
+static const std::string SkateCreateUpgradePackDirectory = DLCDirectory + "/Skate.Create Upgrade Pack";
+static const std::string TimeIsMoneyPackDirectory = DLCDirectory + "/Time is Money Pack";
 static const std::string UpdateDirectory = "update";
 static const std::string GameExecutableFile = "default.xex";
-static const std::string DLCValidationFile = "DLC.xml";
 static const std::string UpdateExecutablePatchFile = "default.xexp";
 static const std::string ISOExtension = ".iso";
 static const std::string OldExtension = ".old";
@@ -46,6 +52,89 @@ static std::string toLower(std::string str) {
     std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c) { return std::tolower(c); });
     return str;
 };
+
+static std::string getDLCValidationFile(DLC dlc)
+{
+    switch (dlc)
+    {
+    case DLC::AfterDark:
+        return "player1p_00000000.big";
+    case DLC::BlackBoxSkatePark:
+        return "presell_00000000.big";
+    case DLC::HawaiianDream:
+        return "dway_park_00000000.big";
+    case DLC::MaloofMoneyCup:
+        return "maloof_money_cup_00000000.big";
+    case DLC::SanVanPartyPack:
+        return "play_00000000.big";
+    case DLC::SkateSharePack:
+        return "project10_00000000.big";
+    case DLC::SkateCreateUpgradePack:
+        return "creator_00000000.big";
+    case DLC::TimeIsMoneyPack:
+        return "unlockall_00000000.big";
+    default:
+        return "";
+    }
+}
+
+static DLC mapBigFileToDLC(const std::string &bigFile)
+{
+    if (bigFile == "player1p_00000000.big")
+    {
+        return DLC::AfterDark;
+    }
+    if (bigFile == "presell_00000000.big")
+    {
+        return DLC::BlackBoxSkatePark;
+    }
+    if (bigFile == "dway_park_00000000.big")
+    {
+        return DLC::HawaiianDream;
+    }
+    if (bigFile == "maloof_money_cup_00000000.big")
+    {
+        return DLC::MaloofMoneyCup;
+    }
+    if (bigFile == "play_00000000.big")
+    {
+        return DLC::SanVanPartyPack;
+    }
+    if (bigFile == "project10_00000000.big")
+    {
+        return DLC::SkateSharePack;
+    }
+    if (bigFile == "creator_00000000.big")
+    {
+        return DLC::SkateCreateUpgradePack;
+    }
+    if (bigFile == "unlockall_00000000.big")
+    {
+        return DLC::TimeIsMoneyPack;
+    }
+
+    return DLC::Unknown;
+}
+
+static DLC detectDLCFromXContent(XContentFileSystem *xcontentVfs)
+{
+    if (xcontentVfs == nullptr)
+    {
+        return DLC::Unknown;
+    }
+
+    for (const auto &file : xcontentVfs->fileMap)
+    {
+        const std::string &fileName = file.first;
+        size_t dotPos = fileName.rfind('.');
+        if (dotPos != std::string::npos && fileName.substr(dotPos) == ".big")
+        {
+            return mapBigFileToDLC(fileName);
+        }
+    }
+
+    return DLC::Unknown;
+}
 
 static std::unique_ptr<VirtualFileSystem> createFileSystemFromPath(const std::filesystem::path &path)
 {
@@ -219,91 +308,71 @@ static bool copyFile(const FilePair &pair, const uint64_t *fileHashes, VirtualFi
 
 static DLC detectDLC(const std::filesystem::path &sourcePath, VirtualFileSystem &sourceVfs, Journal &journal)
 {
-    std::vector<uint8_t> dlcXmlBytes;
-    if (!sourceVfs.load(DLCValidationFile, dlcXmlBytes))
+    if (auto *xcontentVfs = dynamic_cast<XContentFileSystem *>(&sourceVfs))
     {
-        journal.lastResult = Journal::Result::FileMissing;
-        journal.lastErrorMessage = fmt::format("File {} does not exist in {}.", DLCValidationFile, sourceVfs.getName());
-        return DLC::Unknown;
+        DLC dlc = detectDLCFromXContent(xcontentVfs);
+        if (dlc != DLC::Unknown)
+        {
+            return dlc;
+        }
     }
 
-    const char TypeStartString[] = "<Type>";
-    const char TypeEndString[] = "</Type>";
-    size_t dlcByteCount = dlcXmlBytes.size();
-    dlcXmlBytes.resize(dlcByteCount + 1);
-    dlcXmlBytes[dlcByteCount] = '\0';
-    const char *typeStartLocation = strstr((const char *)(dlcXmlBytes.data()), TypeStartString);
-    const char *typeEndLocation = typeStartLocation != nullptr ? strstr(typeStartLocation, TypeEndString) : nullptr;
-    if (typeStartLocation == nullptr || typeEndLocation == nullptr)
-    {
-        journal.lastResult = Journal::Result::DLCParsingFailed;
-        journal.lastErrorMessage = fmt::format("Failed to find DLC type for {}.", sourceVfs.getName());
-        return DLC::Unknown;
-    }
-
-    const char *typeNumberLocation = typeStartLocation + strlen(TypeStartString);
-    size_t typeNumberCount = typeEndLocation - typeNumberLocation;
-    if (typeNumberCount != 1)
-    {
-        journal.lastResult = Journal::Result::UnknownDLCType;
-        journal.lastErrorMessage = fmt::format("DLC type for {} is unknown.", sourceVfs.getName());
-        return DLC::Unknown;
-    }
-
-    switch (*typeNumberLocation)
-    {
-    case '1':
-        return DLC::Spagonia;
-    case '2':
-        return DLC::Chunnan;
-    case '3':
-        return DLC::Mazuri;
-    case '4':
-        return DLC::Holoska;
-    case '5':
-        return DLC::ApotosShamar;
-    case '7':
-        return DLC::EmpireCityAdabat;
-    default:
-        journal.lastResult = Journal::Result::UnknownDLCType;
-        journal.lastErrorMessage = fmt::format("DLC type for {} is unknown.", sourceVfs.getName());
-        return DLC::Unknown;
-    }
+    journal.lastResult = Journal::Result::UnknownDLCType;
+    journal.lastErrorMessage = fmt::format("DLC type for {} is unknown.", sourceVfs.getName());
+    return DLC::Unknown;
 }
 
 static bool fillDLCSource(DLC dlc, Installer::DLCSource &dlcSource) 
 {
     switch (dlc)
     {
-    case DLC::Spagonia:
-        dlcSource.filePairs = { SpagoniaFiles, SpagoniaFilesSize };
-        dlcSource.fileHashes = SpagoniaHashes;
-        dlcSource.targetSubDirectory = SpagoniaDirectory;
+    case DLC::AfterDark:
+        dlcSource.filePairs = { Dlc1Files, Dlc1FilesSize };
+        dlcSource.fileHashes = Dlc1Hashes;
+        dlcSource.targetSubDirectory = AfterDarkDirectory;
+        dlcSource.validationFile = "player1p_00000000.big";
         return true;
-    case DLC::Chunnan:
-        dlcSource.filePairs = { ChunnanFiles, ChunnanFilesSize };
-        dlcSource.fileHashes = ChunnanHashes;
-        dlcSource.targetSubDirectory = ChunnanDirectory;
+    case DLC::BlackBoxSkatePark:
+        dlcSource.filePairs = { Dlc2Files, Dlc2FilesSize };
+        dlcSource.fileHashes = Dlc2Hashes;
+        dlcSource.targetSubDirectory = BlackBoxSkateParkDirectory;
+        dlcSource.validationFile = "presell_00000000.big";
         return true;
-    case DLC::Mazuri:
-        dlcSource.filePairs = { MazuriFiles, MazuriFilesSize };
-        dlcSource.fileHashes = MazuriHashes;
-        dlcSource.targetSubDirectory = MazuriDirectory;
+    case DLC::HawaiianDream:
+        dlcSource.filePairs = { Dlc3Files, Dlc3FilesSize };
+        dlcSource.fileHashes = Dlc3Hashes;
+        dlcSource.targetSubDirectory = HawaiianDreamDirectory;
+        dlcSource.validationFile = "dway_park_00000000.big";
         return true;
-    case DLC::Holoska:
-        dlcSource.filePairs = { HoloskaFiles, HoloskaFilesSize };
-        dlcSource.fileHashes = HoloskaHashes;
-        dlcSource.targetSubDirectory = HoloskaDirectory;
+    case DLC::MaloofMoneyCup:
+        dlcSource.filePairs = { Dlc4Files, Dlc4FilesSize };
+        dlcSource.fileHashes = Dlc4Hashes;
+        dlcSource.targetSubDirectory = MaloofMoneyCupDirectory;
+        dlcSource.validationFile = "maloof_money_cup_00000000.big";
         return true;
-    case DLC::ApotosShamar:
-        dlcSource.filePairs = { ApotosShamarFiles, ApotosShamarFilesSize };
-        dlcSource.fileHashes = ApotosShamarHashes;
-        dlcSource.targetSubDirectory = ApotosShamarDirectory;
+    case DLC::SanVanPartyPack:
+        dlcSource.filePairs = { Dlc5Files, Dlc5FilesSize };
+        dlcSource.fileHashes = Dlc5Hashes;
+        dlcSource.targetSubDirectory = SanVanPartyPackDirectory;
+        dlcSource.validationFile = "play_00000000.big";
         return true;
-    case DLC::EmpireCityAdabat:
-        dlcSource.filePairs = { EmpireCityAdabatFiles, EmpireCityAdabatFilesSize };
-        dlcSource.fileHashes = EmpireCityAdabatHashes;
-        dlcSource.targetSubDirectory = EmpireCityAdabatDirectory;
+    case DLC::SkateSharePack:
+        dlcSource.filePairs = { Dlc6Files, Dlc6FilesSize };
+        dlcSource.fileHashes = Dlc6Hashes;
+        dlcSource.targetSubDirectory = SkateSharePackDirectory;
+        dlcSource.validationFile = "project10_00000000.big";
+        return true;
+    case DLC::SkateCreateUpgradePack:
+        dlcSource.filePairs = { Dlc7Files, Dlc7FilesSize };
+        dlcSource.fileHashes = Dlc7Hashes;
+        dlcSource.targetSubDirectory = SkateCreateUpgradePackDirectory;
+        dlcSource.validationFile = "creator_00000000.big";
+        return true;
+    case DLC::TimeIsMoneyPack:
+        dlcSource.filePairs = { Dlc8Files, Dlc8FilesSize };
+        dlcSource.fileHashes = Dlc8Hashes;
+        dlcSource.targetSubDirectory = TimeIsMoneyPackDirectory;
+        dlcSource.validationFile = "unlockall_00000000.big";
         return true;
     default:
         return false;
@@ -328,20 +397,30 @@ bool Installer::checkGameInstall(const std::filesystem::path &baseDirectory, std
 
 bool Installer::checkDLCInstall(const std::filesystem::path &baseDirectory, DLC dlc)
 {
+    std::string validationFile = getDLCValidationFile(dlc);
+    if (validationFile.empty())
+    {
+        return false;
+    }
+
     switch (dlc)
     {
-    case DLC::Spagonia:
-        return std::filesystem::exists(baseDirectory / SpagoniaDirectory / DLCValidationFile);
-    case DLC::Chunnan:
-        return std::filesystem::exists(baseDirectory / ChunnanDirectory / DLCValidationFile);
-    case DLC::Mazuri:
-        return std::filesystem::exists(baseDirectory / MazuriDirectory / DLCValidationFile);
-    case DLC::Holoska:
-        return std::filesystem::exists(baseDirectory / HoloskaDirectory / DLCValidationFile);
-    case DLC::ApotosShamar:
-        return std::filesystem::exists(baseDirectory / ApotosShamarDirectory / DLCValidationFile);
-    case DLC::EmpireCityAdabat:
-        return std::filesystem::exists(baseDirectory / EmpireCityAdabatDirectory / DLCValidationFile);
+    case DLC::AfterDark:
+        return std::filesystem::exists(baseDirectory / AfterDarkDirectory / validationFile);
+    case DLC::BlackBoxSkatePark:
+        return std::filesystem::exists(baseDirectory / BlackBoxSkateParkDirectory / validationFile);
+    case DLC::HawaiianDream:
+        return std::filesystem::exists(baseDirectory / HawaiianDreamDirectory / validationFile);
+    case DLC::MaloofMoneyCup:
+        return std::filesystem::exists(baseDirectory / MaloofMoneyCupDirectory / validationFile);
+    case DLC::SanVanPartyPack:
+        return std::filesystem::exists(baseDirectory / SanVanPartyPackDirectory / validationFile);
+    case DLC::SkateSharePack:
+        return std::filesystem::exists(baseDirectory / SkateSharePackDirectory / validationFile);
+    case DLC::SkateCreateUpgradePack:
+        return std::filesystem::exists(baseDirectory / SkateCreateUpgradePackDirectory / validationFile);
+    case DLC::TimeIsMoneyPack:
+        return std::filesystem::exists(baseDirectory / TimeIsMoneyPackDirectory / validationFile);
     default:
         return false;
     }
@@ -578,7 +657,7 @@ bool Installer::install(const Sources &sources, const std::filesystem::path &tar
 
     for (const DLCSource &dlcSource : sources.dlc)
     {
-        if (!copyFiles(dlcSource.filePairs, dlcSource.fileHashes, *dlcSource.sourceVfs, targetDirectory / dlcSource.targetSubDirectory, DLCValidationFile, skipHashChecks, journal, progressCallback))
+        if (!copyFiles(dlcSource.filePairs, dlcSource.fileHashes, *dlcSource.sourceVfs, targetDirectory / dlcSource.targetSubDirectory, dlcSource.validationFile, skipHashChecks, journal, progressCallback))
         {
             return false;
         }

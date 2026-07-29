@@ -8,12 +8,14 @@
 
 enum class EDLCFlag
 {
-    ApotosAndShamar,
-    Spagonia,
-    Chunnan,
-    Mazuri,
-    Holoska,
-    EmpireCityAndAdabat,
+    AfterDark,
+    BlackBoxSkatePark,
+    HawaiianDream,
+    MaloofMoneyCup,
+    SanVanPartyPack,
+    SkateSharePack,
+    SkateCreateUpgradePack,
+    TimeIsMoneyPack,
     Count
 };
 
@@ -23,7 +25,7 @@ public:
     char Signature[4] EXT_SIGNATURE;
     uint32_t Version{ EXT_VERSION };
     uint64_t Reserved{};
-    bool DLCFlags[6]{};
+    bool DLCFlags[8]{};
 
     bool VerifySignature() const;
     bool VerifyVersion() const;

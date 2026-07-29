@@ -117,14 +117,16 @@ set(SKATE3_RECOMP_INSTALL_CXX_SOURCES
         "install/iso_file_system.cpp"
         "install/update_checker.cpp"
         "install/xcontent_file_system.cpp"
-        "install/hashes/apotos_shamar.cpp"
-        "install/hashes/chunnan.cpp"
-        "install/hashes/empire_city_adabat.cpp"
         "install/hashes/game.cpp"
-        "install/hashes/holoska.cpp"
-        "install/hashes/mazuri.cpp"
-        "install/hashes/spagonia.cpp"
         "install/hashes/update.cpp"
+        "install/hashes/after_dark.cpp"
+        "install/hashes/black_box.cpp"
+        "install/hashes/danny_way.cpp"
+        "install/hashes/maloof_money_cup.cpp"
+        "install/hashes/san_van_party.cpp"
+        "install/hashes/skate_share.cpp"
+        "install/hashes/skate_create.cpp"
+        "install/hashes/time_is_money.cpp"
 )
 
 set(SKATE3_RECOMP_USER_CXX_SOURCES

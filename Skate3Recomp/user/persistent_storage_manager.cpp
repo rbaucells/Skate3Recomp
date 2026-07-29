@@ -10,12 +10,14 @@ bool PersistentStorageManager::ShouldDisplayDLCMessage(bool setOffendingDLCFlag)
 
     static std::unordered_map<EDLCFlag, DLC> flags =
     {
-        { EDLCFlag::ApotosAndShamar, DLC::ApotosShamar },
-        { EDLCFlag::Spagonia, DLC::Spagonia },
-        { EDLCFlag::Chunnan, DLC::Chunnan },
-        { EDLCFlag::Mazuri, DLC::Mazuri },
-        { EDLCFlag::Holoska, DLC::Holoska },
-        { EDLCFlag::EmpireCityAndAdabat, DLC::EmpireCityAdabat }
+        { EDLCFlag::AfterDark, DLC::AfterDark },
+        { EDLCFlag::BlackBoxSkatePark, DLC::BlackBoxSkatePark },
+        { EDLCFlag::HawaiianDream, DLC::HawaiianDream },
+        { EDLCFlag::MaloofMoneyCup, DLC::MaloofMoneyCup },
+        { EDLCFlag::SanVanPartyPack, DLC::SanVanPartyPack },
+        { EDLCFlag::SkateSharePack, DLC::SkateSharePack },
+        { EDLCFlag::SkateCreateUpgradePack, DLC::SkateCreateUpgradePack },
+        { EDLCFlag::TimeIsMoneyPack, DLC::TimeIsMoneyPack }
     };
 
     auto result = false;
