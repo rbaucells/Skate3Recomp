@@ -94,12 +94,12 @@ set(SKATE3_RECOMP_CPU_CXX_SOURCES
         "cpu/guest_thread.cpp"
 )
 
-#set(SKATE3_RECOMP_GPU_CXX_SOURCES
-#        "gpu/video.cpp"
-#        "gpu/imgui/imgui_common.cpp"
-#        "gpu/imgui/imgui_font_builder.cpp"
-#        "gpu/imgui/imgui_snapshot.cpp"
-#)
+set(SKATE3_RECOMP_GPU_CXX_SOURCES
+        "gpu/video.cpp"
+        "gpu/imgui/imgui_common.cpp"
+        "gpu/imgui/imgui_font_builder.cpp"
+        "gpu/imgui/imgui_snapshot.cpp"
+)
 
 set(SKATE3_RECOMP_APU_CXX_SOURCES
         "apu/audio.cpp"
@@ -110,6 +110,21 @@ set(SKATE3_RECOMP_APU_CXX_SOURCES
 set(SKATE3_RECOMP_HID_CXX_SOURCES
         "hid/hid.cpp"
         "hid/driver/sdl_hid.cpp"
+)
+
+set(UNLEASHED_RECOMP_UI_CXX_SOURCES
+        "ui/achievement_menu.cpp"
+        "ui/achievement_overlay.cpp"
+        "ui/black_bar.cpp"
+        "ui/button_guide.cpp"
+        "ui/fader.cpp"
+        "ui/game_window.cpp"
+        "ui/imgui_utils.cpp"
+        "ui/installer_wizard.cpp"
+        "ui/message_window.cpp"
+        "ui/options_menu.cpp"
+        "ui/options_menu_thumbnails.cpp"
+        "ui/tv_static.cpp"
 )
 
 set(SKATE3_RECOMP_INSTALL_CXX_SOURCES
