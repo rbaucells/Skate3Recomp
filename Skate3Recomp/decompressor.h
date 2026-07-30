@@ -3,6 +3,7 @@
 #include <memory>
 #include <cstddef>
 #include <cstdint>
+#include "zstd.h"
 
 template<size_t N>
 inline std::unique_ptr<uint8_t[]> decompressZstd(const uint8_t(&data)[N], size_t decompressedSize)

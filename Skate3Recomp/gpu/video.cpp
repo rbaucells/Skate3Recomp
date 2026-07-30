@@ -4,7 +4,8 @@
 #include "imgui/imgui_snapshot.h"
 #include "imgui/imgui_font_builder.h"
 
-#include <app.h>
+#include "xxHashMap.h"
+// #include <app.h>
 #include <bc_diff.h>
 #include <cpu/guest_thread.h>
 #include <decompressor.h>
@@ -15,8 +16,8 @@
 #include <kernel/xdbf.h>
 #include <res/bc_diff/button_bc_diff.bin.h>
 #include <res/font/im_font_atlas.dds.h>
-#include <shader/shader_cache.h>
-#include <SWA.h>
+#include <shaders/shader_cache.h>
+// #include <SWA.h>
 #include <ui/achievement_menu.h>
 #include <ui/achievement_overlay.h>
 #include <ui/button_guide.h>
@@ -27,18 +28,21 @@
 #include <ui/options_menu.h>
 #include <ui/game_window.h>
 #include <ui/black_bar.h>
-#include <patches/aspect_ratio_patches.h>
+// #include <patches/aspect_ratio_patches.h>
+#include <numeric>
 #include <user/config.h>
 #include <sdl_listener.h>
+#include <thread>
 #include <xxHashMap.h>
 #include <os/process.h>
+#include "boost/smart_ptr/make_shared_object.h"
 
 #if defined(ASYNC_PSO_DEBUG) || defined(PSO_CACHING)
 #include <magic_enum/magic_enum.hpp>
 #endif
 
 #define UNLEASHED_RECOMP
-#include "../../tools/XenosRecomp/XenosRecomp/shader_common.h"
+#include "../../tools/XenosRecomp-Skate-3/XenosRecomp/shader_common.h"
 
 #ifdef UNLEASHED_RECOMP_D3D12
 #include "shader/blend_color_alpha_ps.hlsl.dxil.h"
