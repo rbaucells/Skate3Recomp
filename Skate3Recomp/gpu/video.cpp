@@ -35,10 +35,15 @@
 #include <thread>
 #include <xxHashMap.h>
 #include <os/process.h>
+
+#include "blockingconcurrentqueue.h"
+#include "backends/imgui_impl_sdl2.h"
 #include "boost/smart_ptr/make_shared_object.h"
 
+#if 0
 #if defined(ASYNC_PSO_DEBUG) || defined(PSO_CACHING)
 #include <magic_enum/magic_enum.hpp>
+#endif
 #endif
 
 #define UNLEASHED_RECOMP
@@ -390,6 +395,7 @@ static TextureDescriptorAllocator g_textureDescriptorAllocator;
 static std::unique_ptr<RenderPipelineLayout> g_pipelineLayout;
 static xxHashMap<std::unique_ptr<RenderPipeline>> g_pipelines;
 
+#if 0
 #ifdef ASYNC_PSO_DEBUG
 static std::atomic<uint32_t> g_pipelinesCreatedInRenderThread;
 static std::atomic<uint32_t> g_pipelinesCreatedAsynchronously;
@@ -403,7 +409,9 @@ static Mutex g_debugMutex;
 static xxHashMap<PipelineState> g_pipelineStatesToCache;
 static Mutex g_pipelineCacheMutex;
 #endif
+#endif
 
+#if 0
 static std::atomic<uint32_t> g_compilingPipelineTaskCount;
 static std::atomic<uint32_t> g_pendingPipelineTaskCount;
 
@@ -439,6 +447,7 @@ static void EnqueuePipelineTask(PipelineTaskType type, const boost::shared_ptr<H
     if ((++g_pendingPipelineTaskCount) == 1)
         g_pendingPipelineTaskCount.notify_one();
 }
+#endif
 
 static const PipelineState g_pipelineStateCache[] =
 {
@@ -834,7 +843,9 @@ enum class RenderCommandType
     SetBooleans,
     SetVertexShaderConstants,
     SetPixelShaderConstants,
+#if 0
     AddPipeline,
+#endif
     DrawPrimitive,
     DrawIndexedPrimitive,
     DrawPrimitiveUP,
@@ -946,11 +957,13 @@ struct RenderCommand
             uint32_t size;
         } setPixelShaderConstants;
 
+#if 0
         struct
         {
             XXH64_hash_t hash;
             RenderPipeline* pipeline;
         } addPipeline;
+#endif
 
         struct 
         {
@@ -2579,6 +2592,7 @@ static void DrawImGui()
 
     ResetImGuiCallbacks();
 
+#if 0
 #ifdef ASYNC_PSO_DEBUG
     if (ImGui::Begin("Async PSO Stats"))
     {
@@ -2593,6 +2607,7 @@ static void DrawImGui()
         ImGui::TextUnformatted(g_pipelineDebugText.c_str());
     }
     ImGui::End();
+#endif
 #endif
 
     AchievementMenu::Draw();
@@ -2789,7 +2804,9 @@ void Video::WaitOnSwapChain()
     }
 }
 
+#if 0
 static bool g_shouldPrecompilePipelines;
+#endif
 static std::atomic<bool> g_executedCommandList;
 
 void Video::Present() 
@@ -2805,12 +2822,14 @@ void Video::Present()
     cmd.type = RenderCommandType::ExecuteCommandList;
     g_renderQueue.enqueue(cmd);
 
+#if 0
     // All the shaders are available at this point. We can precompile embedded PSOs then.
     if (g_shouldPrecompilePipelines)
     {
         EnqueuePipelineTask(PipelineTaskType::PrecompilePipelines, {});
         g_shouldPrecompilePipelines = false;
     }
+#endif
 
     g_executedCommandList.wait(false);
     g_executedCommandList = false;
@@ -2883,10 +2902,12 @@ void Video::Present()
     g_presentProfiler.Reset();
 }
 
+#if 0
 void Video::StartPipelinePrecompilation()
 {
     g_shouldPrecompilePipelines = true;
 }
+#endif
 
 static void SetRootDescriptor(const UploadAllocation& allocation, size_t index)
 {
@@ -4060,8 +4081,10 @@ static void SanitizePipelineState(PipelineState& pipelineState)
 
 static std::unique_ptr<RenderPipeline> CreateGraphicsPipeline(const PipelineState& pipelineState)
 {
+#if 0
 #ifdef ASYNC_PSO_DEBUG
     ++g_pipelinesCurrentlyCompiling;
+#endif
 #endif
 
     RenderGraphicsPipelineDesc desc;
@@ -4129,8 +4152,10 @@ static std::unique_ptr<RenderPipeline> CreateGraphicsPipeline(const PipelineStat
     
     auto pipeline = g_device->createGraphicsPipeline(desc);
 
+#if 0
 #ifdef ASYNC_PSO_DEBUG
     --g_pipelinesCurrentlyCompiling;
+#endif
 #endif
 
     return pipeline;
@@ -4146,6 +4171,7 @@ static RenderPipeline* CreateGraphicsPipelineInRenderThread(PipelineState pipeli
     {
         pipeline = CreateGraphicsPipeline(pipelineState);
 
+#if 0
 #ifdef ASYNC_PSO_DEBUG
         bool loading = *SWA::SGlobals::ms_IsLoading;
 
@@ -4222,10 +4248,13 @@ static RenderPipeline* CreateGraphicsPipelineInRenderThread(PipelineState pipeli
                 + g_pipelineDebugText;
         }
 #endif
+#endif
 
+#if 0
 #ifdef PSO_CACHING
         std::lock_guard lock(g_pipelineCacheMutex);
         g_pipelineStatesToCache.emplace(hash, pipelineState);
+#endif
 #endif
     }
     
@@ -4434,6 +4463,7 @@ static void ProcSetPixelShaderConstants(const RenderCommand& cmd)
     g_dirtyStates.pixelShaderConstants = true;
 }
 
+#if 0
 static void ProcAddPipeline(const RenderCommand& cmd)
 {
     auto& args = cmd.addPipeline;
@@ -4454,6 +4484,7 @@ static void ProcAddPipeline(const RenderCommand& cmd)
         delete args.pipeline;
     }
 }
+#endif
 
 static constexpr int32_t COMMON_DEPTH_BIAS_VALUE = int32_t((1 << 24) * 0.002f);
 static constexpr float COMMON_SLOPE_SCALED_DEPTH_BIAS_VALUE = 1.0f;
@@ -5288,7 +5319,9 @@ static std::thread g_renderThread([]
                 case RenderCommandType::SetBooleans:                       ProcSetBooleans(cmd); break;
                 case RenderCommandType::SetVertexShaderConstants:          ProcSetVertexShaderConstants(cmd); break;
                 case RenderCommandType::SetPixelShaderConstants:           ProcSetPixelShaderConstants(cmd); break;
+#if 0
                 case RenderCommandType::AddPipeline:                       ProcAddPipeline(cmd); break;
+#endif
                 case RenderCommandType::DrawPrimitive:                     ProcDrawPrimitive(cmd); break;
                 case RenderCommandType::DrawIndexedPrimitive:              ProcDrawIndexedPrimitive(cmd); break;
                 case RenderCommandType::DrawPrimitiveUP:                   ProcDrawPrimitiveUP(cmd); break;
@@ -6196,6 +6229,7 @@ void MotionBlurPrevInvViewProjectionMidAsmHook(PPCRegister& r10)
     mtxProjection[14] = -mtxProjection[14];
 }
 
+#if 0
 // Normally, we could delay setting IsMadeOne, but the game relies on that flag
 // being present to handle load priority. To work around that, we can prevent
 // IsMadeAll from being set until the compilation is finished. Time for a custom flag!
@@ -6235,7 +6269,9 @@ struct PipelineTaskToken
         }
     }
 };
+#endif
 
+#if 0
 struct PipelineStateQueueItem
 {
     XXH64_hash_t pipelineHash;
@@ -6266,7 +6302,9 @@ static void CompilePipeline(XXH64_hash_t pipelineHash, const PipelineState& pipe
     cmd.addPipeline.pipeline = pipeline.release();
     g_renderQueue.enqueue(cmd);
 }
+#endif
 
+#if 0
 static void PipelineCompilerThread()
 {
 #ifdef _WIN32
@@ -6312,20 +6350,24 @@ static void PipelineCompilerThread()
 }
 
 static std::vector<std::unique_ptr<std::thread>> g_pipelineCompilerThreads = []()
-    {
-        size_t threadCount = std::max(2u, (std::thread::hardware_concurrency() * 2) / 3);
+{
+    size_t threadCount = std::max(2u, (std::thread::hardware_concurrency() * 2) / 3);
 
-        std::vector<std::unique_ptr<std::thread>> threads(threadCount);
-        for (auto& thread : threads)
-            thread = std::make_unique<std::thread>(PipelineCompilerThread);
+    std::vector<std::unique_ptr<std::thread>> threads(threadCount);
+    for (auto& thread : threads)
+        thread = std::make_unique<std::thread>(PipelineCompilerThread);
 
-        return threads;
-    }();
+    return threads;
+}();
+#endif
 
+#if 0
 static constexpr uint32_t MODEL_DATA_VFTABLE = 0x82073A44;
 static constexpr uint32_t TERRAIN_MODEL_DATA_VFTABLE = 0x8211D25C;
 static constexpr uint32_t PARTICLE_MATERIAL_VFTABLE = 0x8211F198;
+#endif
 
+#if 0
 // Allocate the shared pointer only when new compilations are happening.
 // If nothing was compiled, the local "token" variable will get destructed with RAII instead.
 struct PipelineTaskTokenPair
@@ -6333,7 +6375,9 @@ struct PipelineTaskTokenPair
     PipelineTaskToken token;
     std::shared_ptr<PipelineTaskToken> sharedToken;
 };
+#endif
 
+#if 0
 // Having this separate, because I don't want to lock a mutex in the render thread before
 // every single draw. Might be worth profiling to see if it actually has an impact and merge them.
 static xxHashMap<PipelineState> g_asyncPipelineStates;
@@ -6391,7 +6435,9 @@ static void EnqueueGraphicsPipelineCompilation(
     }
 #endif
 }
+#endif
 
+#if 0
 struct CompilationArgs
 {
     PipelineTaskTokenPair tokenPair;
@@ -6941,9 +6987,11 @@ static void CompileParticleMaterialPipeline(const Hedgehog::Sparkle::CParticleMa
         }
     }
 }
+#endif
 
 static std::thread::id g_mainThreadId = std::this_thread::get_id();
 
+#if 0
 // SWA::CGameModeStage::ExitLoading
 PPC_FUNC_IMPL(__imp__sub_825369A0);
 PPC_FUNC(sub_825369A0)
@@ -7119,7 +7167,9 @@ static bool CheckMadeAll(const T& modelData)
 
     return true;
 }
+#endif
 
+#if 0
 static void PipelineTaskConsumerThread()
 {
 #ifdef _WIN32
@@ -7377,9 +7427,13 @@ static void PipelineTaskConsumerThread()
         std::this_thread::yield();
     }
 }
+#endif
 
+#if 0
 static std::thread g_pipelineTaskConsumerThread(PipelineTaskConsumerThread);
+#endif
 
+#if 0
 #ifdef ASYNC_PSO_DEBUG
 
 PPC_FUNC_IMPL(__imp__sub_82E33330);
@@ -7532,6 +7586,7 @@ public:
 };
 SDLEventListenerForPSOCaching g_sdlEventListenerForPSOCaching;
 #endif
+#endif
 
 void VideoConfigValueChangedCallback(IConfigDef* config)
 {
@@ -7552,7 +7607,7 @@ void VideoConfigValueChangedCallback(IConfigDef* config)
         config == &Config::GITextureFiltering;
 
     if (shouldRecompile)
-        EnqueuePipelineTask(PipelineTaskType::RecompilePipelines, {});
+        // EnqueuePipelineTask(PipelineTaskType::RecompilePipelines, {});
 }
 
 // SWA::CCsdTexListMirage::SetFilter
