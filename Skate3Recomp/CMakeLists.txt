@@ -178,6 +178,7 @@ set(SKATE3_RECOMP_THIRDPARTY_INCLUDES
         "${SKATE3_RECOMP_THIRDPARTY}/unordered_dense/include"
         "${SKATE3_RECOMP_TOOLS}/bc_diff"
         "${SKATE3_RECOMP_TOOLS}/XenosRecomp-Skate-3/thirdparty/smol-v/source"
+        "${SKATE3_RECOMP_THIRDPARTY}/include"
 )
 
 set_source_files_properties(${SKATE3_RECOMP_THIRDPARTY_SOURCES} PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
@@ -255,7 +256,7 @@ target_link_libraries(Skate3Recomp PRIVATE
         plume
 )
 
-target_include_directories(Skate3Recomp PRIVATE "${SKATE3_RECOMP_LIB}/out" ${CMAKE_CURRENT_SOURCE_DIR} ${SKATE3_RECOMP_THIRDPARTY_INCLUDES})
+target_include_directories(Skate3Recomp PRIVATE "${SKATE3_RECOMP_LIB}/out" ${CMAKE_CURRENT_SOURCE_DIR} ${SKATE3_RECOMP_THIRDPARTY_INCLUDESSKATE3_RECOMP_THIRDPARTY_INCLUDES})
 
 # precompile headers
 #target_precompile_headers(Skate3Recomp PUBLIC ${SKATE3_RECOMP_PRECOMPILED_HEADERS})

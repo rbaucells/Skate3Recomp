@@ -55,3 +55,6 @@
 [submodule "Skate3RecompResources"]
 	path = Skate3RecompResources
 	url = https://github.com/rbaucells/Skate3RecompResources.git
+[submodule "thirdparty/boost"]
+	path = thirdparty/boost
+	url = https://github.com/boostorg/boost.git
