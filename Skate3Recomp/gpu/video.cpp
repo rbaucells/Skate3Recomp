@@ -4,6 +4,7 @@
 #include "imgui/imgui_snapshot.h"
 #include "imgui/imgui_font_builder.h"
 
+#include "fmt/core.h"
 #include "xxHashMap.h"
 // #include <app.h>
 #include <bc_diff.h>
@@ -35,8 +36,13 @@
 #include <thread>
 #include <xxHashMap.h>
 #include <os/process.h>
+#include "aspect_ratio.h"
 
 #include "blockingconcurrentqueue.h"
+#include "ddspp.h"
+#include "implot.h"
+#include "smolv.h"
+#include "stb_image.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "boost/smart_ptr/make_shared_object.h"
 
@@ -1730,7 +1736,7 @@ bool Video::CreateHostDevice(const char *sdlVideoDriver, bool graphicsApiRetry)
                 continue;
             }
 
-            g_device = g_interface->createDevice(Config::GraphicsDevice);
+            g_device = g_interface->createDevice(Config::GraphicsDevice.Value);
             if (g_device != nullptr)
             {
                 const RenderDeviceDescription &deviceDescription = g_device->getDescription();
@@ -3037,11 +3043,18 @@ static GuestSurface* GetBackBuffer()
     return g_backBuffer;
 }
 
+static float ComputeScale(float aspectRatio)
+{
+    return ((aspectRatio * 720.0f) / 1280.0f) / sqrt((aspectRatio * 720.0f) / 1280.0f);
+}
+
 void Video::ComputeViewportDimensions()
 {
     uint32_t width = g_swapChain->getWidth();
     uint32_t height = g_swapChain->getHeight();
-    float aspectRatio = float(width) / float(height);
+    float widthf = width;
+    float heightf = height;
+    float aspectRatio = widthf / heightf;
 
     switch (Config::AspectRatio)
     {
@@ -3084,7 +3097,37 @@ void Video::ComputeViewportDimensions()
         break;
     }
 
-    AspectRatioPatches::ComputeOffsets();
+    // AspectRatioPatches::ComputeOffsets();
+    g_aspectRatio = widthf / heightf;
+    g_aspectRatioGameplayScale = 1.0f;
+
+    if (g_aspectRatio >= NARROW_ASPECT_RATIO)
+    {
+        g_aspectRatioOffsetX = (widthf - heightf * WIDE_ASPECT_RATIO) / 2.0f;
+        g_aspectRatioOffsetY = 0.0f;
+        g_aspectRatioScale = heightf / 720.0f;
+
+        // keep same scale above Steam Deck aspect ratio
+        if (g_aspectRatio < WIDE_ASPECT_RATIO)
+        {
+            // interpolate to original 4:3 scale
+            float steamDeckScale = g_aspectRatio / WIDE_ASPECT_RATIO;
+            float narrowScale = ComputeScale(NARROW_ASPECT_RATIO);
+
+            float lerpFactor = std::clamp((g_aspectRatio - NARROW_ASPECT_RATIO) / (STEAM_DECK_ASPECT_RATIO - NARROW_ASPECT_RATIO), 0.0f, 1.0f);
+            g_aspectRatioGameplayScale = narrowScale + (steamDeckScale - narrowScale) * lerpFactor;
+        }
+    }
+    else
+    {
+        // 4:3 crop
+        g_aspectRatioOffsetX = (widthf - widthf * NARROW_ASPECT_RATIO) / 2.0f;
+        g_aspectRatioOffsetY = (heightf - widthf / NARROW_ASPECT_RATIO) / 2.0f;
+        g_aspectRatioScale = widthf / 960.0f;
+        g_aspectRatioGameplayScale = ComputeScale(NARROW_ASPECT_RATIO);
+    }
+
+    g_aspectRatioNarrowScale = std::clamp((g_aspectRatio - NARROW_ASPECT_RATIO) / (WIDE_ASPECT_RATIO - NARROW_ASPECT_RATIO), 0.0f, 1.0f);
 }
 
 static RenderFormat ConvertFormat(uint32_t format)
@@ -7601,12 +7644,12 @@ void VideoConfigValueChangedCallback(IConfigDef* config)
         Video::ComputeViewportDimensions();
         
     // Config options that require pipeline recompilation
-    bool shouldRecompile =
-        config == &Config::AntiAliasing ||
-        config == &Config::TransparencyAntiAliasing ||
-        config == &Config::GITextureFiltering;
+    // bool shouldRecompile =
+        // config == &Config::AntiAliasing ||
+        // config == &Config::TransparencyAntiAliasing ||
+        // config == &Config::GITextureFiltering;
 
-    if (shouldRecompile)
+    // if (shouldRecompile)
         // EnqueuePipelineTask(PipelineTaskType::RecompilePipelines, {});
 }
 
@@ -7711,9 +7754,11 @@ static void ConvertToDegenerateTriangles(uint16_t* indices, uint32_t indexCount,
     }
 }
 
+#if 0
 struct MeshResource
 {
-    SWA_INSERT_PADDING(0x4);
+    // SWA_INSERT_PADDING(0x4);
+    uint8_t pad[0x4];
     be<uint32_t> indexCount;
     be<uint32_t> indices;
 };
@@ -7778,7 +7823,8 @@ PPC_FUNC(sub_82E250D0)
 
 struct LightAndIndexBufferResourceV1
 {
-    SWA_INSERT_PADDING(0x4);
+    // SWA_INSERT_PADDING(0x4);
+    uint8_t pad[0x4];
     be<uint32_t> indexCount;
     be<uint32_t> indices;
 };
@@ -7939,3 +7985,4 @@ GUEST_FUNCTION_STUB(sub_82BEA018);
 GUEST_FUNCTION_STUB(sub_82BEA7C0);
 GUEST_FUNCTION_STUB(sub_82BFFF88); // D3DXFilterTexture
 GUEST_FUNCTION_STUB(sub_82BD96D0);
+#endif

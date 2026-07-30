@@ -1,11 +1,13 @@
 #include "config.h"
 #include <os/logger.h>
-// #include <ui/game_window.h>
+#include <ui/game_window.h>
+#include <cassert>
 #include <vector>
 #include "fmt/core.h"
 #include <user/paths.h>
 
 #include "SDL_scancode.h"
+#include "toml++/toml.h"
 
 std::vector<IConfigDef*> g_configDefinitions;
 

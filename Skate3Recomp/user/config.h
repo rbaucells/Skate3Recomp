@@ -5,6 +5,7 @@
 #include <functional>
 #include "SDL_scancode.h"
 #include <locale/locale.h>
+#include <map>
 
 #include "toml++/impl/forward_declarations.hpp"
 
