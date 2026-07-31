@@ -187,6 +187,7 @@ set(SKATE3_RECOMP_CXX_SOURCES
         "preload_executable.cpp"
         "sdl_listener.cpp"
         "stdafx.cpp"
+        "app.cpp"
 
         ${SKATE3_RECOMP_KERNEL_CXX_SOURCES}
         ${SKATE3_RECOMP_LOCALE_CXX_SOURCES}
