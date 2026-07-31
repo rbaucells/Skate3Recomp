@@ -1,6 +1,6 @@
 [main]
-file_path = "../skate-3/default.xex"
-patched_file_path = "../skate-3/default_patched.xex"
+file_path = "../skate-3/skate-3/default.xex"
+patched_file_path = "../skate-3/skate-3/default_patched.xex"
 out_directory_path = "../out/ppc"
 switch_table_file_path = "jump_table.toml"
 
