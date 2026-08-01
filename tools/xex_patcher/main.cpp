@@ -7,7 +7,7 @@
 #include "directory_file_system.h"
 #include "xcontent_file_system.h"
 
-const std::filesystem::path skate_3_base = "/Users/ricardo/Projects/skate-3/game";
+const std::filesystem::path skate_3_base = "/Users/ricardo/Projects/skate-3/skate-3";
 const std::filesystem::path skate_3_patch_tu3 = "/Users/ricardo/Projects/skate-3/TU_12K2276_000000C000000.00000000000O3";
 
 const std::filesystem::path sonic_base = "/Users/ricardo/Projects/sonic/game";
@@ -18,11 +18,11 @@ const std::filesystem::path patched_out = "/Users/ricardo/Projects/Skate3Recomp/
 constexpr std::string_view results[] = {"Success", "FileOpenFailed", "FileWriteFailed", "XexFileUnsupported", "XexFileInvalid", "PatchFileInvalid", "PatchIncompatible", "PatchFailed", "PatchUnsupported"};
 
 int main() {
-    // const std::unique_ptr<VirtualFileSystem> baseVfs = std::make_unique<DirectoryFileSystem>(skate_3_base);
-    // const std::unique_ptr<VirtualFileSystem> patchVfs = std::make_unique<XContentFileSystem>(skate_3_patch_tu3);
+    const std::unique_ptr<VirtualFileSystem> baseVfs = std::make_unique<DirectoryFileSystem>(skate_3_base);
+    const std::unique_ptr<VirtualFileSystem> patchVfs = std::make_unique<XContentFileSystem>(skate_3_patch_tu3);
 
-    const std::unique_ptr<VirtualFileSystem> baseVfs = std::make_unique<DirectoryFileSystem>(sonic_base);
-    const std::unique_ptr<VirtualFileSystem> patchVfs = std::make_unique<XContentFileSystem>(sonic_patch_tu2);
+    // const std::unique_ptr<VirtualFileSystem> baseVfs = std::make_unique<DirectoryFileSystem>(sonic_base);
+    // const std::unique_ptr<VirtualFileSystem> patchVfs = std::make_unique<XContentFileSystem>(sonic_patch_tu2);
 
     std::vector<uint8_t> xexBytes;
     std::vector<uint8_t> patchBytes;
@@ -39,7 +39,7 @@ int main() {
     }
 
     std::vector<uint8_t> patchedBytes;
-    XexPatcher::Result result = XexPatcher::apply(xexBytes.data(), xexBytes.size(), patchBytes.data(), patchBytes.size(), patchedBytes, true);
+    XexPatcher::Result result = XexPatcher::apply(xexBytes.data(), xexBytes.size(), patchBytes.data(), patchBytes.size(), patchedBytes, false);
 
     std::cout << results[(int)result] << std::endl;;
 
