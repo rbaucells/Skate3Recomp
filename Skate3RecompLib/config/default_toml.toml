@@ -17,6 +17,7 @@ longjmp_address = 0x82f4feb0
 setjmp_address = 0x82f6faa0
 
 invalid_instructions = [
+    # switch data tables
     { data = 0x82977d5c, size = 0xdc },
     { data = 0x82aeaf34, size = 0x48 },
     { data = 0x82954aa8, size = 0x60 },
@@ -359,7 +360,28 @@ invalid_instructions = [
     { data = 0x82a45c84, size = 0x28 },
     { data = 0x82a45d5c, size = 0x28 },
     { data = 0x827db758, size = 0x28 },
-    { data = 0x8296c42c, size = 0x84 }
+    { data = 0x8296c42c, size = 0x84 },
+
+    # ptr lab
+    { data = 0x823e78b8, size = 0xa0c },
+    { data = 0x82497a80, size = 0x3c },
+    { data = 0x824d212c, size = 0x30 },
+    { data = 0x824d2214, size = 0x30 },
+    { data = 0x8251345c, size = 0xdc },
+    { data = 0x82541020, size = 0x60 },
+    { data = 0x825416c4, size = 0x90 },
+    { data = 0x825ec368, size = 0x104 },
+    { data = 0x825f11c8, size = 0x38 },
+    { data = 0x825f1460, size = 0x50 },
+    { data = 0x827870fc, size = 0x64 },
+    { data = 0x828e6a68, size = 0x40 },
+    { data = 0x8294b68c, size = 0x3c },
+    { data = 0x82950b5c, size = 0x3c },
+    { data = 0x82b143bc, size = 0x34 },
+    { data = 0x82bfb698, size = 0x2c },
+    { data = 0x82d913f0, size = 0x2c },
+    { data = 0x82e59e88, size = 0x31c },
+    { data = 0x82e5a38c, size = 0x4b4 },
 ]
 
 functions = [
@@ -631,5 +653,5 @@ functions = [
     { address = 0x828d08b0, size = 0x740 },
     { address = 0x823d9988, size = 0x50f0 },
     { address = 0x82400f80, size = 0x6550 },
-    { address = 0x823d2a38, size = 0x6f50 },
+    { address = 0x823d2a38, size = 0x6f50 }
 ]

@@ -8,29 +8,47 @@ else()
     add_compile_options(-ffp-model=strict)
 endif()
 
-set(SKATE3_RECOMP_PPC_RECOMPILED_SOURCES
-        "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/ppc_config.h"
-        "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/ppc_context.h"
-        "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/ppc_func_mapping.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/ppc_recomp_shared.h"
+set(SKATE3_RECOMP_PPC_DEFAULT_RECOMPILED_SOURCES
+        "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/default_ppc/ppc_config.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/default_ppc/ppc_context.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/default_ppc/ppc_func_mapping.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/default_ppc/ppc_recomp_shared.h"
 )
 
 foreach(i RANGE 0 275)
-    list(APPEND SKATE3_RECOMP_PPC_RECOMPILED_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/ppc_recomp.${i}.cpp")
+    list(APPEND SKATE3_RECOMP_PPC_DEFAULT_RECOMPILED_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/default_ppc/ppc_recomp.${i}.cpp")
 endforeach()
 
-target_compile_definitions(XenonRecomp PRIVATE
-        XENON_RECOMP_CONFIG_FILE_PATH=\"${CMAKE_CURRENT_SOURCE_DIR}/config/toml.toml\"
-        XENON_RECOMP_HEADER_FILE_PATH=\"${SKATE3_RECOMP_TOOLS}/XenonRecomp-Skate-3/XenonUtils/ppc_context.h\")
+set(SKATE3_RECOMP_PPC_EAWEBKIT_RECOMPILED_SOURCES
+        "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/eawebkit_ppc/ppc_config.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/eawebkit_ppc/ppc_context.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/eawebkit_ppc/ppc_func_mapping.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/eawebkit_ppc/ppc_recomp_shared.h"
+)
+
+foreach(i RANGE 0 275)
+    list(APPEND SKATE3_RECOMP_PPC_EAWEBKIT_RECOMPILED_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/eawebkit_ppc/ppc_recomp.${i}.cpp")
+endforeach()
 
 add_custom_command(
         OUTPUT
-            ${SKATE3_RECOMP_PPC_RECOMPILED_SOURCES}
+            ${SKATE3_RECOMP_PPC_DEFAULT_RECOMPILED_SOURCES}
         COMMAND
-            $<TARGET_FILE:XenonRecomp>
+            $<TARGET_FILE:XenonRecomp> "${CMAKE_CURRENT_SOURCE_DIR}/config/default_toml.toml" "${SKATE3_RECOMP_TOOLS}/XenonRecomp-Skate-3/XenonUtils/ppc_context.h"
         DEPENDS
-            "${CMAKE_CURRENT_SOURCE_DIR}/skate-3/default.xex"
-            "${CMAKE_CURRENT_SOURCE_DIR}/config/toml.toml"
+            "${CMAKE_CURRENT_SOURCE_DIR}/skate-3/default_patched.xex"
+            "${CMAKE_CURRENT_SOURCE_DIR}/config/default_toml.toml"
+        USES_TERMINAL
+)
+
+add_custom_command(
+        OUTPUT
+            ${SKATE3_RECOMP_PPC_EAWEBKIT_RECOMPILED_SOURCES}
+        COMMAND
+            $<TARGET_FILE:XenonRecomp> "${CMAKE_CURRENT_SOURCE_DIR}/config/eawebkit_toml.toml" "${SKATE3_RECOMP_TOOLS}/XenonRecomp-Skate-3/XenonUtils/ppc_context.h"
+        DEPENDS
+            "${CMAKE_CURRENT_SOURCE_DIR}/skate-3/eawebkit_patched.xex"
+            "${CMAKE_CURRENT_SOURCE_DIR}/config/eawebkit_toml.toml"
         USES_TERMINAL
 )
 
@@ -46,14 +64,14 @@ add_custom_command(
         COMMAND
             $<TARGET_FILE:XenosRecomp>
         DEPENDS
-            "${CMAKE_CURRENT_SOURCE_DIR}/skate-3/data/big/shaders_final.big"
+            "${CMAKE_CURRENT_SOURCE_DIR}/skate-3/skate-3/data/big/shaders_final.big"
             ${XENOS_RECOMP_SOURCES}
             ${XENOS_RECOMP_INCLUDE}
         USES_TERMINAL
 )
 
 add_library(Skate3RecompLib
-        ${SKATE3_RECOMP_PPC_RECOMPILED_SOURCES}
+        ${SKATE3_RECOMP_PPC_DEFAULT_RECOMPILED_SOURCES}
         "${CMAKE_CURRENT_SOURCE_DIR}/out/shaders/shader_cache.cpp"
 )
 
