@@ -1,7 +1,7 @@
 [main]
 file_path = "../skate-3/skate-3/data/webkit/EAWebkit.xex"
 patched_file_path = "../skate-3/EAWebKit_patched.xex"
-out_directory_path = "../out/eawebkit_ppc"
+out_directory_path = "../out/ppc/eawebkit_ppc"
 switch_table_file_path = "eawebkit_jump_table.toml"
 
 restgprlr_14_address = 0x88476720
