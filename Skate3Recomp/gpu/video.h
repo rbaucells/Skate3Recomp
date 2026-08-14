@@ -5,6 +5,7 @@
 //#define PSO_CACHING_CLEANUP
 
 #include <plume_render_interface.h>
+#include <__atomic/atomic_ref.h>
 
 #include "mutex.h"
 #include "xbox.h"

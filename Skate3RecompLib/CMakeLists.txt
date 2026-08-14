@@ -15,7 +15,7 @@ set(SKATE3_RECOMP_PPC_DEFAULT_RECOMPILED_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/default_ppc/ppc_recomp_shared.h"
 )
 
-foreach(i RANGE 0 275)
+foreach(i RANGE 0 277)
     list(APPEND SKATE3_RECOMP_PPC_DEFAULT_RECOMPILED_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/default_ppc/ppc_recomp.${i}.cpp")
 endforeach()
 
@@ -26,7 +26,7 @@ set(SKATE3_RECOMP_PPC_EAWEBKIT_RECOMPILED_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/eawebkit_ppc/ppc_recomp_shared.h"
 )
 
-foreach(i RANGE 0 119)
+foreach(i RANGE 0 118)
     list(APPEND SKATE3_RECOMP_PPC_EAWEBKIT_RECOMPILED_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/eawebkit_ppc/ppc_recomp.${i}.cpp")
 endforeach()
 
@@ -72,6 +72,7 @@ add_custom_command(
 
 add_library(Skate3RecompLib
         ${SKATE3_RECOMP_PPC_DEFAULT_RECOMPILED_SOURCES}
+        ${SKATE3_RECOMP_PPC_EAWEBKIT_RECOMPILED_SOURCES}
         "${CMAKE_CURRENT_SOURCE_DIR}/out/shaders/shader_cache.cpp"
 )
 
