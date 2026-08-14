@@ -26,7 +26,7 @@ set(SKATE3_RECOMP_PPC_EAWEBKIT_RECOMPILED_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/eawebkit_ppc/ppc_recomp_shared.h"
 )
 
-foreach(i RANGE 0 275)
+foreach(i RANGE 0 119)
     list(APPEND SKATE3_RECOMP_PPC_EAWEBKIT_RECOMPILED_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/out/ppc/eawebkit_ppc/ppc_recomp.${i}.cpp")
 endforeach()
 

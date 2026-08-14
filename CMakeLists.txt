@@ -8,7 +8,7 @@ if(NOT CMAKE_TOOLCHAIN_FILE)
     set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "vcpkg toolchain file")
 endif()
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 
 set(SKATE3_RECOMP_TOOLS "${CMAKE_SOURCE_DIR}/tools")
 set(SKATE3_RECOMP_THIRDPARTY "${CMAKE_SOURCE_DIR}/thirdparty")

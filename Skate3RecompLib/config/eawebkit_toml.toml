@@ -15,3 +15,18 @@ savefpr_14_address = 0x884771a0
 
 longjmp_address = 0x884789e0
 setjmp_address = 0x88478d00
+
+functions = [
+    { address = 0x880f0cf8, size = 0x1c0 },
+    { address = 0x8822d9d0, size = 0x120 },
+    { address = 0x88236f40, size = 0x100 },
+    { address = 0x882742a0, size = 0xb0 },
+    { address = 0x882743a0, size = 0xd0 },
+    { address = 0x88274470, size = 0x1b8 },
+    { address = 0x88274848, size = 0x170 },
+    { address = 0x882749b8, size = 0xf8 },
+    { address = 0x88274b08, size = 0x108 },
+    { address = 0x8835ed30, size = 0x1f0 },
+    { address = 0x8835f320, size = 0x48 },
+    { address = 0x88444068, size = 0x1e0 }
+]
