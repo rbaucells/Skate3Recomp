@@ -262,6 +262,26 @@ target_include_directories(Skate3Recomp PRIVATE "${SKATE3_RECOMP_LIB}/out" ${CMA
 # precompile headers
 #target_precompile_headers(Skate3Recomp PUBLIC ${SKATE3_RECOMP_PRECOMPILED_HEADERS})
 
+include("version.cmake")
+
+set(VERSION_TXT "${PROJECT_SOURCE_DIR}/res/version.txt")
+
+# Only show Git info and build type if not Release.
+set(SHOW_GIT_INFO_AND_BUILD_TYPE 0)
+if (NOT ${CMAKE_BUILD_TYPE} MATCHES "Release")
+    set(SHOW_GIT_INFO_AND_BUILD_TYPE 1)
+endif()
+
+GenerateVersionSources(
+        OUTPUT_DIR ${PROJECT_SOURCE_DIR}
+        VERSION_TXT ${VERSION_TXT}
+        H_TEMPLATE "${PROJECT_SOURCE_DIR}/res/version.h.template"
+        CXX_TEMPLATE "${PROJECT_SOURCE_DIR}/res/version.cpp.template"
+        BUILD_TYPE ${CMAKE_BUILD_TYPE}
+        SHOW_GIT_INFO ${SHOW_GIT_INFO_AND_BUILD_TYPE}
+        SHOW_BUILD_TYPE ${SHOW_GIT_INFO_AND_BUILD_TYPE}
+)
+
 function(compile_shader FILE_PATH TARGET_NAME)
     set(FILE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/gpu/shader/${FILE_PATH}.hlsl)
     cmake_path(GET FILE_PATH STEM VARIABLE_NAME)
