@@ -3,7 +3,7 @@
 #include <CoreFoundation/CFBundle.h>
 #include <dlfcn.h>
 #include <mach-o/dyld.h>
-#include <signal.h>
+#include <csignal>
 #include <sys/param.h>
 #include <unistd.h>
 

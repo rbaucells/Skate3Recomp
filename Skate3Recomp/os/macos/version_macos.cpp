@@ -1,3 +1,4 @@
+#include <cassert>
 #include <os/version.h>
 
 os::version::OSVersion os::version::GetOSVersion()
