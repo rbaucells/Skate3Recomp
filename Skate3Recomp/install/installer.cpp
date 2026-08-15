@@ -1,5 +1,6 @@
 #include "installer.h"
 
+#include <functional>
 #include <thread>
 #include <xxh3.h>
 

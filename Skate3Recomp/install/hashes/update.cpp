@@ -7,10 +7,12 @@ extern const std::pair<const char *, uint32_t> UpdateFiles[];
 extern const size_t UpdateFilesSize;
 
 const uint64_t UpdateHashes[] = {
-    7334510866062970864ULL,
+    5912062447025048551ULL,
+    16254130348111888668ULL,
 };
 
 const std::pair<const char *, uint32_t> UpdateFiles[] = {
+    { "data/webkit/EAWebkit.xexp", 1 },
     { "default.xexp", 1 },
 };
 

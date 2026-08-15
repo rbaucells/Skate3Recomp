@@ -1,5 +1,6 @@
 #include "update_checker.h"
 
+#include <thread>
 #include <curl/curl.h>
 #include <nlohmann/json.hpp>
 

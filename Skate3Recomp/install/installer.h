@@ -4,6 +4,7 @@
 #include <span>
 #include <set>
 #include <filesystem>
+#include <functional>
 #include <string>
 
 #include "virtual_file_system.h"

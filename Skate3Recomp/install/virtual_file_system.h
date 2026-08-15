@@ -2,6 +2,8 @@
 
 #include <algorithm>
 #include <memory>
+#include <vector>
+#include <cstdint>
 
 struct VirtualFileSystem {
     virtual ~VirtualFileSystem() { };
