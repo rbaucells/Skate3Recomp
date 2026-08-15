@@ -89,7 +89,7 @@ xxHashMap<std::string> gRootMap;
 
 std::string_view XamGetRootPath(const std::string_view& root)
 {
-    const auto result = gRootMap.find(StringHash(root));
+    const auto result = gRootMap.find(XXH3_64bits(root.data(), root.size()));
 
     if (result == gRootMap.end())
         return "";
@@ -99,7 +99,7 @@ std::string_view XamGetRootPath(const std::string_view& root)
 
 void XamRootCreate(const std::string_view& root, const std::string_view& path)
 {
-    gRootMap.emplace(StringHash(root), path);
+    gRootMap.emplace(XXH3_64bits(root.data(), root.size()), path);
 }
 
 XamListener::XamListener()
@@ -125,7 +125,7 @@ void XamRegisterContent(const XCONTENT_DATA& data, const std::string_view& root)
 {
     const auto idx = data.dwContentType - 1;
 
-    gContentRegistry[idx].emplace(StringHash(data.szFileName), XHOSTCONTENT_DATA{ data }).first->second.szRoot = root;
+    gContentRegistry[idx].emplace(XXH3_64bits(data.szFileName, XCONTENT_MAX_FILENAME), XHOSTCONTENT_DATA{ data }).first->second.szRoot = root;
 }
 
 void XamRegisterContent(uint32_t type, const std::string_view name, const std::string_view& root)
@@ -296,7 +296,7 @@ uint32_t XamContentCreateEx(uint32_t dwUserIndex, const char* szRootName, const 
     uint32_t dwFileCacheSize, uint64_t uliContentSize, PXXOVERLAPPED pOverlapped)
 {
     const auto& registry = gContentRegistry[pContentData->dwContentType - 1];
-    const auto exists = registry.contains(StringHash(pContentData->szFileName));
+    const auto exists = registry.contains(XXH3_64bits(pContentData->szFileName, XCONTENT_MAX_FILENAME));
     const auto mode = dwContentFlags & 0xF;
 
     if (mode == CREATE_ALWAYS)
@@ -331,7 +331,7 @@ uint32_t XamContentCreateEx(uint32_t dwUserIndex, const char* szRootName, const 
         }
         else
         {
-            XamRootCreate(szRootName, registry.find(StringHash(pContentData->szFileName))->second.szRoot);
+            XamRootCreate(szRootName, registry.find(XXH3_64bits(pContentData->szFileName, XCONTENT_MAX_FILENAME))->second.szRoot);
         }
 
         return ERROR_SUCCESS;
@@ -344,7 +344,7 @@ uint32_t XamContentCreateEx(uint32_t dwUserIndex, const char* szRootName, const 
             if (pdwDisposition)
                 *pdwDisposition = XCONTENT_EXISTING;
 
-            XamRootCreate(szRootName, registry.find(StringHash(pContentData->szFileName))->second.szRoot);
+            XamRootCreate(szRootName, registry.find(XXH3_64bits(pContentData->szFileName, XCONTENT_MAX_FILENAME))->second.szRoot);
 
             return ERROR_SUCCESS;
         }
@@ -362,7 +362,7 @@ uint32_t XamContentCreateEx(uint32_t dwUserIndex, const char* szRootName, const 
 
 uint32_t XamContentClose(const char* szRootName, XXOVERLAPPED* pOverlapped)
 {
-    gRootMap.erase(StringHash(szRootName));
+    gRootMap.erase(XXH3_64bits(szRootName, strlen(szRootName)));
     return 0;
 }
 
