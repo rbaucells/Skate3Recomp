@@ -1,3 +1,4 @@
+#include <cassert>
 #include <apu/audio.h>
 #include <apu/embedded_player.h>
 #include <user/config.h>
@@ -10,6 +11,8 @@
 #include <res/sounds/sys_actstg_pausedecide.ogg.h>
 #include <res/sounds/sys_actstg_pausewinclose.ogg.h>
 #include <res/sounds/sys_actstg_pausewinopen.ogg.h>
+
+#include "SDL_mixer.h"
 
 enum class EmbeddedSound
 {

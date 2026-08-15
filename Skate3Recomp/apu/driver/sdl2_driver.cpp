@@ -1,8 +1,12 @@
+#include <SDL.h>
+#include <SDL_audio.h>
+#include <SDL_hints.h>
 #include <apu/audio.h>
 #include <cpu/guest_thread.h>
 #include <kernel/heap.h>
 #include <os/logger.h>
 #include <user/config.h>
+#include <thread>
 
 static PPCFunc* g_clientCallback{};
 static uint32_t g_clientCallbackParam{}; // pointer in guest memory
