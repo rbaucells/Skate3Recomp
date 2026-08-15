@@ -7,7 +7,7 @@
 #include <kernel/xdm.h>
 #include <app.h>
 
-#define TRANSLATE_INPUT(S, X) SDL_GameControllerGetButton(controller, S) << FirstBitLow(X)
+#define TRANSLATE_INPUT(S, X) SDL_GameControllerGetButton(controller, S) << std::countr_zero(X)
 #define VIBRATION_TIMEOUT_MS 5000
 
 class Controller

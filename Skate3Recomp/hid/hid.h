@@ -1,4 +1,7 @@
 #pragma once
+#include <cstdint>
+
+#include "xbox.h"
 
 namespace hid
 {
