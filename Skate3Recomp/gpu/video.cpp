@@ -6,7 +6,7 @@
 
 #include "fmt/core.h"
 #include "xxHashMap.h"
-// #include <app.h>
+#include <app.h>
 #include <bc_diff.h>
 #include <cpu/guest_thread.h>
 #include <decompressor.h>
@@ -1898,7 +1898,7 @@ bool Video::CreateHostDevice(const char *sdlVideoDriver, bool graphicsApiRetry)
         break;
     }
 
-    g_swapChain = g_queue->createSwapChain(GameWindow::s_renderWindow, bufferCount, BACKBUFFER_FORMAT, Config::MaxFrameLatency);
+    g_swapChain = g_queue->createSwapChain({GameWindow::s_renderWindow, BACKBUFFER_FORMAT, bufferCount, false, Config::MaxFrameLatency});
     g_swapChain->setVsyncEnabled(Config::VSync);
     g_swapChainValid = !g_swapChain->needsResize();
 

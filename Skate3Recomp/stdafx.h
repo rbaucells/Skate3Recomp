@@ -30,7 +30,7 @@ using Microsoft::WRL::ComPtr;
 #include <xxhash.h>
 #include <ankerl/unordered_dense.h>
 #include <ddspp.h>
-#include <ppc/ppc_recomp_shared.h>
+// #include <ppc/ppc_recomp_shared.h>
 #include <toml++/toml.hpp>
 #include <zstd.h>
 #include <stb_image.h>
