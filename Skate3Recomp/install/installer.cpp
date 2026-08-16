@@ -35,6 +35,8 @@ static const std::string TimeIsMoneyPackDirectory = DLCDirectory + "/Time is Mon
 static const std::string UpdateDirectory = "update";
 static const std::string GameExecutableFile = "default.xex";
 static const std::string UpdateExecutablePatchFile = "default.xexp";
+static const std::string EawebkitExecutableFile = "data/webkit/EAWebkit.xex";
+static const std::string EawebkitUpdateExecutablePatchFile = "data/webkit/EAWebkit.xexp";
 static const std::string ISOExtension = ".iso";
 static const std::string OldExtension = ".old";
 static const std::string TempExtension = ".tmp";
@@ -393,6 +395,12 @@ bool Installer::checkGameInstall(const std::filesystem::path &baseDirectory, std
     if (!std::filesystem::exists(baseDirectory / GameDirectory / GameExecutableFile))
         return false;
 
+    if (!std::filesystem::exists(baseDirectory / UpdateDirectory / EawebkitUpdateExecutablePatchFile))
+        return false;
+
+    if (!std::filesystem::exists(baseDirectory / GameDirectory / EawebkitExecutableFile))
+        return false;
+
     return true;
 }
 
@@ -711,8 +719,28 @@ bool Installer::install(const Sources &sources, const std::filesystem::path &tar
         return false;
     }
 
-    // Update the progress with the artificial amount attributed to the patching.
-    journal.progressCounter += PatcherContribution;
+    // Update the progress with the artificial amount attributed to the patching / 2 because half is default half is eawebkit.
+    journal.progressCounter += PatcherContribution / 2;
+
+    // Patch the executable with the update's file.
+    std::filesystem::path eawebkitBaseXexPath = targetDirectory / GameDirectory / EawebkitExecutableFile;
+    std::filesystem::path eawebkitPatchPath = targetDirectory / UpdateDirectory / EawebkitUpdateExecutablePatchFile;
+    std::filesystem::path eawebkitPatchedXexPath = patchedDirectory / EawebkitExecutableFile;
+    XexPatcher::Result eawebkitPatcherResult = XexPatcher::apply(eawebkitBaseXexPath, eawebkitPatchPath, eawebkitPatchedXexPath);
+    if (patcherResult == XexPatcher::Result::Success)
+    {
+        journal.createdFiles.push_back(eawebkitPatchedXexPath);
+    }
+    else
+    {
+        journal.lastResult = Journal::Result::PatchProcessFailed;
+        journal.lastPatcherResult = eawebkitPatcherResult;
+        journal.lastErrorMessage = "Eawebkit patch process failed.";
+        return false;
+    }
+
+    // Update the progress with the artificial amount attributed to the patching / 2 because half is default half is eawebkit.
+    journal.progressCounter += PatcherContribution / 2;
     
     for (uint32_t i = 0; i < 2; i++)
     {
@@ -755,7 +783,7 @@ bool Installer::parseGame(const std::filesystem::path &sourcePath)
         return false;
     }
 
-    return sourceVfs->exists(GameExecutableFile);
+    return sourceVfs->exists(GameExecutableFile) && sourceVfs->exists(EawebkitExecutableFile);
 }
 
 bool Installer::parseUpdate(const std::filesystem::path &sourcePath)
@@ -766,7 +794,7 @@ bool Installer::parseUpdate(const std::filesystem::path &sourcePath)
         return false;
     }
 
-    return sourceVfs->exists(UpdateExecutablePatchFile);
+    return sourceVfs->exists(UpdateExecutablePatchFile) && sourceVfs->exists(EawebkitUpdateExecutablePatchFile);
 }
 
 DLC Installer::parseDLC(const std::filesystem::path &sourcePath)
