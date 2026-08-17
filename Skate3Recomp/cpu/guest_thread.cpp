@@ -239,8 +239,13 @@ uint32_t SetThreadIdealProcessorImpl(GuestThreadHandle* hThread, uint32_t dwIdea
 }
 
 // TODO: Replace with real skate 3 locations
-GUEST_FUNCTION_HOOK(sub_82DFA2E8, SetThreadNameImpl);
-GUEST_FUNCTION_HOOK(sub_82BD57A8, GetThreadPriorityImpl);
-GUEST_FUNCTION_HOOK(sub_82BD5910, SetThreadIdealProcessorImpl);
+// TODO: Idk where in skate 3 this is
+// GUEST_FUNCTION_HOOK(sub_82DFA2E8, SetThreadNameImpl);
 
-GUEST_FUNCTION_STUB(sub_82BD58F8); // Some function that updates the TEB, don't really care since the field is not set
+// GUEST_FUNCTION_HOOK(sub_82BD57A8, GetThreadPriorityImpl);
+GUEST_FUNCTION_HOOK(sub_82ee1f50, GetThreadPriorityImpl);
+// GUEST_FUNCTION_HOOK(sub_82BD5910, SetThreadIdealProcessorImpl);
+GUEST_FUNCTION_HOOK(sub_82ee2060, SetThreadIdealProcessorImpl);
+
+// TODO: idk where in skate 3 this is
+// GUEST_FUNCTION_STUB(sub_82BD58F8); // Some function that updates the TEB, don't really care since the field is not set

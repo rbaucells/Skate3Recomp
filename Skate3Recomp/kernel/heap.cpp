@@ -120,14 +120,21 @@ void XFreeMem(uint32_t baseAddress, uint32_t flags)
         g_userHeap.Free(g_memory.Translate(baseAddress));
 }
 
-// TODO: Replace with real skate 3 locations
-GUEST_FUNCTION_STUB(sub_82BD7788); // HeapCreate
-GUEST_FUNCTION_STUB(sub_82BD9250); // HeapDestroy
+// GUEST_FUNCTION_STUB(sub_82BD7788); // HeapCreate
+GUEST_FUNCTION_STUB(sub_82ee40b8); // HeapCreate
 
-GUEST_FUNCTION_HOOK(sub_82BD7D30, RtlAllocateHeap);
-GUEST_FUNCTION_HOOK(sub_82BD8600, RtlFreeHeap);
-GUEST_FUNCTION_HOOK(sub_82BD88F0, RtlReAllocateHeap);
-GUEST_FUNCTION_HOOK(sub_82BD6FD0, RtlSizeHeap);
+// TODO: IDK where in skate 3 this is
+// GUEST_FUNCTION_STUB(sub_82BD9250); // HeapDestroy
 
-GUEST_FUNCTION_HOOK(sub_831CC9C8, XAllocMem);
-GUEST_FUNCTION_HOOK(sub_831CCA60, XFreeMem);
+// GUEST_FUNCTION_HOOK(sub_82BD7D30, RtlAllocateHeap);
+GUEST_FUNCTION_HOOK(sub_82ee4688, RtlAllocateHeap);
+// GUEST_FUNCTION_HOOK(sub_82BD8600, RtlFreeHeap);
+GUEST_FUNCTION_HOOK(sub_82ee4f50, RtlFreeHeap);
+// GUEST_FUNCTION_HOOK(sub_82BD88F0, RtlReAllocateHeap);
+GUEST_FUNCTION_HOOK(sub_82ee5248, RtlReAllocateHeap);
+// GUEST_FUNCTION_HOOK(sub_82BD6FD0, RtlSizeHeap);
+GUEST_FUNCTION_HOOK(sub_82ee3900, RtlSizeHeap);
+// GUEST_FUNCTION_HOOK(sub_831CC9C8, XAllocMem);
+GUEST_FUNCTION_HOOK(sub_82ee5b38, XAllocMem);
+// GUEST_FUNCTION_HOOK(sub_831CCA60, XFreeMem);
+GUEST_FUNCTION_HOOK(sub_82ee5bd0, XFreeMem);
