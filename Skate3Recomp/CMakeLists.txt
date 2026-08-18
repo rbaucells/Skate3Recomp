@@ -112,20 +112,20 @@ set(SKATE3_RECOMP_HID_CXX_SOURCES
         "hid/driver/sdl_hid.cpp"
 )
 
-set(SKATE3_RECOMP_UI_CXX_SOURCES
-        "ui/achievement_menu.cpp"
-        "ui/achievement_overlay.cpp"
-        "ui/black_bar.cpp"
-        "ui/button_guide.cpp"
-        "ui/fader.cpp"
-        "ui/game_window.cpp"
-        "ui/imgui_utils.cpp"
-        "ui/installer_wizard.cpp"
-        "ui/message_window.cpp"
-        "ui/options_menu.cpp"
-        "ui/options_menu_thumbnails.cpp"
-        "ui/tv_static.cpp"
-)
+#set(SKATE3_RECOMP_UI_CXX_SOURCES
+#        "ui/achievement_menu.cpp"
+#        "ui/achievement_overlay.cpp"
+#        "ui/black_bar.cpp"
+#        "ui/button_guide.cpp"
+#        "ui/fader.cpp"
+#        "ui/game_window.cpp"
+#        "ui/imgui_utils.cpp"
+#        "ui/installer_wizard.cpp"
+#        "ui/message_window.cpp"
+#        "ui/options_menu.cpp"
+#        "ui/options_menu_thumbnails.cpp"
+#        "ui/tv_static.cpp"
+#)
 
 set(SKATE3_RECOMP_INSTALL_CXX_SOURCES
         "install/installer.cpp"
@@ -197,7 +197,7 @@ set(SKATE3_RECOMP_CXX_SOURCES
         ${SKATE3_RECOMP_APU_CXX_SOURCES}
         ${SKATE3_RECOMP_HID_CXX_SOURCES}
         ${SKATE3_RECOMP_PATCHES_CXX_SOURCES}
-        ${SKATE3_RECOMP_UI_CXX_SOURCES}
+#        ${SKATE3_RECOMP_UI_CXX_SOURCES}
         ${SKATE3_RECOMP_INSTALL_CXX_SOURCES}
         ${SKATE3_RECOMP_USER_CXX_SOURCES}
         ${SKATE3_RECOMP_MOD_CXX_SOURCES}
@@ -257,7 +257,7 @@ target_link_libraries(Skate3Recomp PRIVATE
         plume
 )
 
-target_include_directories(Skate3Recomp PRIVATE "${SKATE3_RECOMP_LIB}/out" ${CMAKE_CURRENT_SOURCE_DIR} ${SKATE3_RECOMP_THIRDPARTY_INCLUDES})
+target_include_directories(Skate3Recomp PRIVATE "${SKATE3_RECOMP_LIB}/out" ${CMAKE_CURRENT_SOURCE_DIR} ${SKATE3_RECOMP_THIRDPARTY_INCLUDES} "${SKATE3_RECOMP_TOOLS}/XenonRecomp-Skate-3/thirdparty/simde")
 
 # precompile headers
 #target_precompile_headers(Skate3Recomp PUBLIC ${SKATE3_RECOMP_PRECOMPILED_HEADERS})

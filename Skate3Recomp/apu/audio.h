@@ -1,6 +1,7 @@
 #pragma once
 
-#include "ppc_context.h"
+#include <cpu/ppc_context.h>
+#include "xbox.h"
 
 #define XAUDIO_SAMPLES_HZ 48000
 #define XAUDIO_NUM_CHANNELS 6

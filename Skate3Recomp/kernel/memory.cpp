@@ -26,10 +26,19 @@ Memory::Memory()
     mprotect(base, 4096, PROT_NONE);
 #endif
 
-    for (size_t i = 0; PPCFuncMappings[i].guest != 0; i++)
+    extern PPCFuncMapping PPCFuncMappings_default_ppc[];
+    extern PPCFuncMapping PPCFuncMappings_eawebkit_ppc[];
+
+    for (size_t i = 0; PPCFuncMappings_default_ppc[i].guest != 0; i++)
     {
-        if (PPCFuncMappings[i].host != nullptr)
-            InsertFunction(PPCFuncMappings[i].guest, PPCFuncMappings[i].host);
+        if (PPCFuncMappings_default_ppc[i].host != nullptr)
+            InsertFunction(PPCFuncMappings_default_ppc[i].guest, PPCFuncMappings_default_ppc[i].host);
+    }
+
+    for (size_t i = 0; PPCFuncMappings_eawebkit_ppc[i].guest != 0; i++)
+    {
+        if (PPCFuncMappings_eawebkit_ppc[i].host != nullptr)
+            InsertFunction(PPCFuncMappings_eawebkit_ppc[i].guest, PPCFuncMappings_eawebkit_ppc[i].host);
     }
 }
 

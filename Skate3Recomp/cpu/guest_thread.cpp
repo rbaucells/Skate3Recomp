@@ -3,7 +3,7 @@
 #include <kernel/memory.h>
 #include <kernel/heap.h>
 #include <kernel/function.h>
-#include "ppc_context.h"
+#include <cpu/ppc_context.h>
 
 constexpr size_t PCR_SIZE = 0xAB0;
 constexpr size_t TLS_SIZE = 0x100;

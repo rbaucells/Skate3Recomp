@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ppc_context.h"
 #include <cpu/ppc_context.h>
 #include <array>
 #include "xbox.h"

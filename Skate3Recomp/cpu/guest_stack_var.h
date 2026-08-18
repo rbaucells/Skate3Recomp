@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ppc_context.h"
+#include <cpu/ppc_context.h>
 #include <kernel/memory.h>
 
 // DO NOT use this type as anything other than a local variable.

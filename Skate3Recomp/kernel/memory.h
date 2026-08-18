@@ -1,8 +1,9 @@
 #pragma once
 
-// #include "ppc/ppc_config.h"
-// #include "ppc_context.h"
+#include <cpu/ppc_context.h>
 #include <cassert>
+#include <unordered_map>
+#include <vector>
 
 #ifndef _WIN32
 #define MEM_COMMIT  0x00001000  
@@ -12,6 +13,17 @@
 struct Memory
 {
     uint8_t* base{};
+
+    struct XexRegion
+    {
+        uint32_t image_base;
+        uint32_t image_size;
+        uint32_t code_base;
+        uint32_t code_end;
+    };
+
+    std::unordered_map<uint32_t, PPCFunc*> functions;
+    std::vector<XexRegion> regions;
 
     Memory();
 
@@ -38,12 +50,30 @@ struct Memory
 
     PPCFunc* FindFunction(uint32_t guest) const noexcept
     {
-        return PPC_LOOKUP_FUNC(base, guest);
+        auto it = functions.find(guest);
+        if (it != functions.end())
+            return it->second;
+
+        return nullptr;
     }
 
     void InsertFunction(uint32_t guest, PPCFunc* host)
     {
-        PPC_LOOKUP_FUNC(base, guest) = host;
+        functions[guest] = host;
+
+        for (const auto& region : regions)
+        {
+            if (guest >= region.code_base && guest < region.code_end)
+            {
+                *(PPCFunc**)(base + region.image_base + region.image_size + (uint64_t(guest - region.code_base) * 2)) = host;
+                break;
+            }
+        }
+    }
+
+    void RegisterXexRegion(uint32_t image_base, uint32_t image_size, uint32_t code_base, uint32_t code_end)
+    {
+        regions.push_back({image_base, image_size, code_base, code_end});
     }
 };
 
