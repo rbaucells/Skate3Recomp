@@ -415,9 +415,6 @@ static Mutex g_debugMutex;
 static xxHashMap<PipelineState> g_pipelineStatesToCache;
 static Mutex g_pipelineCacheMutex;
 #endif
-#endif
-
-#if 0
 static std::atomic<uint32_t> g_compilingPipelineTaskCount;
 static std::atomic<uint32_t> g_pendingPipelineTaskCount;
 
@@ -4291,9 +4288,6 @@ static RenderPipeline* CreateGraphicsPipelineInRenderThread(PipelineState pipeli
                 + g_pipelineDebugText;
         }
 #endif
-#endif
-
-#if 0
 #ifdef PSO_CACHING
         std::lock_guard lock(g_pipelineCacheMutex);
         g_pipelineStatesToCache.emplace(hash, pipelineState);
@@ -6312,9 +6306,6 @@ struct PipelineTaskToken
         }
     }
 };
-#endif
-
-#if 0
 struct PipelineStateQueueItem
 {
     XXH64_hash_t pipelineHash;
@@ -6345,9 +6336,6 @@ static void CompilePipeline(XXH64_hash_t pipelineHash, const PipelineState& pipe
     cmd.addPipeline.pipeline = pipeline.release();
     g_renderQueue.enqueue(cmd);
 }
-#endif
-
-#if 0
 static void PipelineCompilerThread()
 {
 #ifdef _WIN32
@@ -6402,15 +6390,9 @@ static std::vector<std::unique_ptr<std::thread>> g_pipelineCompilerThreads = [](
 
     return threads;
 }();
-#endif
-
-#if 0
 static constexpr uint32_t MODEL_DATA_VFTABLE = 0x82073A44;
 static constexpr uint32_t TERRAIN_MODEL_DATA_VFTABLE = 0x8211D25C;
 static constexpr uint32_t PARTICLE_MATERIAL_VFTABLE = 0x8211F198;
-#endif
-
-#if 0
 // Allocate the shared pointer only when new compilations are happening.
 // If nothing was compiled, the local "token" variable will get destructed with RAII instead.
 struct PipelineTaskTokenPair
@@ -6418,9 +6400,6 @@ struct PipelineTaskTokenPair
     PipelineTaskToken token;
     std::shared_ptr<PipelineTaskToken> sharedToken;
 };
-#endif
-
-#if 0
 // Having this separate, because I don't want to lock a mutex in the render thread before
 // every single draw. Might be worth profiling to see if it actually has an impact and merge them.
 static xxHashMap<PipelineState> g_asyncPipelineStates;
@@ -6478,9 +6457,6 @@ static void EnqueueGraphicsPipelineCompilation(
     }
 #endif
 }
-#endif
-
-#if 0
 struct CompilationArgs
 {
     PipelineTaskTokenPair tokenPair;
@@ -7210,9 +7186,6 @@ static bool CheckMadeAll(const T& modelData)
 
     return true;
 }
-#endif
-
-#if 0
 static void PipelineTaskConsumerThread()
 {
 #ifdef _WIN32
@@ -7899,90 +7872,148 @@ PPC_FUNC(sub_82E3B1C0)
     if (newIndices != nullptr)
         g_userHeap.Free(newIndices);
 }
+#endif
 
-GUEST_FUNCTION_HOOK(sub_82BD99B0, CreateDevice);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BD99B0, CreateDevice);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE6230, DestructResource);
 
-GUEST_FUNCTION_HOOK(sub_82BE6230, DestructResource);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE9300, LockTextureRect);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE7780, UnlockTextureRect);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE6B98, LockVertexBuffer);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE6BE8, UnlockVertexBuffer);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE61D0, GetVertexBufferDesc);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE6CA8, LockIndexBuffer);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE6CF0, UnlockIndexBuffer);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE6200, GetIndexBufferDesc);
 
-GUEST_FUNCTION_HOOK(sub_82BE9300, LockTextureRect);
-GUEST_FUNCTION_HOOK(sub_82BE7780, UnlockTextureRect);
+// GUEST_FUNCTION_HOOK(sub_82BE96F0, GetSurfaceDesc);
+GUEST_FUNCTION_HOOK(sub_82b82398, GetSurfaceDesc);
 
-GUEST_FUNCTION_HOOK(sub_82BE6B98, LockVertexBuffer);
-GUEST_FUNCTION_HOOK(sub_82BE6BE8, UnlockVertexBuffer);
-GUEST_FUNCTION_HOOK(sub_82BE61D0, GetVertexBufferDesc);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE04B0, GetVertexDeclaration);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE0530, HashVertexDeclaration);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BDA8C0, Video::Present);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BDD330, GetBackBuffer);
 
-GUEST_FUNCTION_HOOK(sub_82BE6CA8, LockIndexBuffer);
-GUEST_FUNCTION_HOOK(sub_82BE6CF0, UnlockIndexBuffer);
-GUEST_FUNCTION_HOOK(sub_82BE6200, GetIndexBufferDesc);
+// GUEST_FUNCTION_HOOK(sub_82BE9498, CreateTexture);
+GUEST_FUNCTION_HOOK(sub_82b82120, CreateTexture);
 
-GUEST_FUNCTION_HOOK(sub_82BE96F0, GetSurfaceDesc);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE6AD0, CreateVertexBuffer);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE6BF8, CreateIndexBuffer);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE95B8, CreateSurface);
 
-GUEST_FUNCTION_HOOK(sub_82BE04B0, GetVertexDeclaration);
-GUEST_FUNCTION_HOOK(sub_82BE0530, HashVertexDeclaration);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BF6400, StretchRect);
 
-GUEST_FUNCTION_HOOK(sub_82BDA8C0, Video::Present);
-GUEST_FUNCTION_HOOK(sub_82BDD330, GetBackBuffer);
+// GUEST_FUNCTION_HOOK(sub_82BDD9F0, SetRenderTarget);
+GUEST_FUNCTION_HOOK(sub_82b79220, SetRenderTarget);
 
-GUEST_FUNCTION_HOOK(sub_82BE9498, CreateTexture);
-GUEST_FUNCTION_HOOK(sub_82BE6AD0, CreateVertexBuffer);
-GUEST_FUNCTION_HOOK(sub_82BE6BF8, CreateIndexBuffer);
-GUEST_FUNCTION_HOOK(sub_82BE95B8, CreateSurface);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BDDD38, SetDepthStencilSurface);
 
-GUEST_FUNCTION_HOOK(sub_82BF6400, StretchRect);
+// GUEST_FUNCTION_HOOK(sub_82BFE4C8, Clear);
+GUEST_FUNCTION_HOOK(sub_82b7d708, Clear);
 
-GUEST_FUNCTION_HOOK(sub_82BDD9F0, SetRenderTarget);
-GUEST_FUNCTION_HOOK(sub_82BDDD38, SetDepthStencilSurface);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BDD8C0, SetViewport);
 
-GUEST_FUNCTION_HOOK(sub_82BFE4C8, Clear);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE9818, SetTexture);
 
-GUEST_FUNCTION_HOOK(sub_82BDD8C0, SetViewport);
+// GUEST_FUNCTION_HOOK(sub_82BDCFB0, SetScissorRect);
+GUEST_FUNCTION_HOOK(sub_82b78ef8, SetScissorRect);
 
-GUEST_FUNCTION_HOOK(sub_82BE9818, SetTexture);
-GUEST_FUNCTION_HOOK(sub_82BDCFB0, SetScissorRect);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE5900, DrawPrimitive);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE5CF0, DrawIndexedPrimitive);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE52F8, DrawPrimitiveUP);
 
-GUEST_FUNCTION_HOOK(sub_82BE5900, DrawPrimitive);
-GUEST_FUNCTION_HOOK(sub_82BE5CF0, DrawIndexedPrimitive);
-GUEST_FUNCTION_HOOK(sub_82BE52F8, DrawPrimitiveUP);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE0428, CreateVertexDeclaration);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE02E0, SetVertexDeclaration);
 
-GUEST_FUNCTION_HOOK(sub_82BE0428, CreateVertexDeclaration);
-GUEST_FUNCTION_HOOK(sub_82BE02E0, SetVertexDeclaration);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE1A80, CreateVertexShader);
 
-GUEST_FUNCTION_HOOK(sub_82BE1A80, CreateVertexShader);
-GUEST_FUNCTION_HOOK(sub_82BE0110, SetVertexShader);
+// GUEST_FUNCTION_HOOK(sub_82BE0110, SetVertexShader);
+GUEST_FUNCTION_HOOK(sub_82b7f408, SetVertexShader);
 
-GUEST_FUNCTION_HOOK(sub_82BDD0F8, SetStreamSource);
-GUEST_FUNCTION_HOOK(sub_82BDD218, SetIndices);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BDD0F8, SetStreamSource);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BDD218, SetIndices);
 
-GUEST_FUNCTION_HOOK(sub_82BE1990, CreatePixelShader);
-GUEST_FUNCTION_HOOK(sub_82BDFE58, SetPixelShader);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BE1990, CreatePixelShader);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82BDFE58, SetPixelShader);
 
-GUEST_FUNCTION_HOOK(sub_82C003B8, D3DXFillTexture);
-GUEST_FUNCTION_HOOK(sub_82C00910, D3DXFillVolumeTexture);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82C003B8, D3DXFillTexture);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82C00910, D3DXFillVolumeTexture);
 
-GUEST_FUNCTION_HOOK(sub_82E43FC8, MakePictureData);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82E43FC8, MakePictureData);
 
-GUEST_FUNCTION_HOOK(sub_82E9EE38, SetResolution);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82E9EE38, SetResolution);
 
-GUEST_FUNCTION_HOOK(sub_82AE2BF8, ScreenShaderInit);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_HOOK(sub_82AE2BF8, ScreenShaderInit);
 
 // This is a buggy function that recreates framebuffers
 // if the inverse capture ratio is not 2.0, but the parameter
 // is completely unused and not stored, so it ends up
 // recreating framebuffers every single frame instead.
-GUEST_FUNCTION_STUB(sub_82BAAD38);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_STUB(sub_82BAAD38);
 
-GUEST_FUNCTION_STUB(sub_822C15D8);
-GUEST_FUNCTION_STUB(sub_822C1810);
-GUEST_FUNCTION_STUB(sub_82BD97A8);
-GUEST_FUNCTION_STUB(sub_82BD97E8);
-GUEST_FUNCTION_STUB(sub_82BDD370); // SetGammaRamp
-GUEST_FUNCTION_STUB(sub_82BE05B8);
-GUEST_FUNCTION_STUB(sub_82BE9C98);
-GUEST_FUNCTION_STUB(sub_82BEA308);
-GUEST_FUNCTION_STUB(sub_82CD5D68);
-GUEST_FUNCTION_STUB(sub_82BE9B28);
-GUEST_FUNCTION_STUB(sub_82BEA018);
-GUEST_FUNCTION_STUB(sub_82BEA7C0);
-GUEST_FUNCTION_STUB(sub_82BFFF88); // D3DXFilterTexture
-GUEST_FUNCTION_STUB(sub_82BD96D0);
-#endif
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_STUB(sub_822C15D8);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_STUB(sub_822C1810);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_STUB(sub_82BD97A8);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_STUB(sub_82BD97E8);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_STUB(sub_82BDD370); // SetGammaRamp
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_STUB(sub_82BE05B8);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_STUB(sub_82BE9C98);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_STUB(sub_82BEA308);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_STUB(sub_82CD5D68);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_STUB(sub_82BE9B28);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_STUB(sub_82BEA018);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_STUB(sub_82BEA7C0);
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_STUB(sub_82BFFF88); // D3DXFilterTexture
+// TODO: I have no idea where this is in skate 3
+// GUEST_FUNCTION_STUB(sub_82BD96D0);
+// TODO: I have no idea where this is in skate 3
