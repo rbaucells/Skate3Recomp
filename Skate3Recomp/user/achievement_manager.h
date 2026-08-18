@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <user/achievement_data.h>
 
 enum class EAchBinStatus

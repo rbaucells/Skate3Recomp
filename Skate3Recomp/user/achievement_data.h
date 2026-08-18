@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+#include <ctime>
 #include <user/paths.h>
 
 #define ACH_FILENAME  "ACH-DATA"

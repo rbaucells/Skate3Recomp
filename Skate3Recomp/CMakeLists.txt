@@ -95,7 +95,7 @@ set(SKATE3_RECOMP_CPU_CXX_SOURCES
 )
 
 set(SKATE3_RECOMP_GPU_CXX_SOURCES
-        "gpu/video.cpp"
+#        "gpu/video.cpp"
         "gpu/imgui/imgui_common.cpp"
         "gpu/imgui/imgui_font_builder.cpp"
         "gpu/imgui/imgui_snapshot.cpp"
@@ -282,56 +282,56 @@ GenerateVersionSources(
         SHOW_BUILD_TYPE ${SHOW_GIT_INFO_AND_BUILD_TYPE}
 )
 
-function(compile_shader FILE_PATH TARGET_NAME)
-    set(FILE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/gpu/shader/${FILE_PATH}.hlsl)
-    cmake_path(GET FILE_PATH STEM VARIABLE_NAME)
-    if (SKATE3_RECOMP_D3D12)
-        add_custom_command(
-                OUTPUT ${FILE_PATH}.dxil.h
-                COMMAND ${DIRECTX_DXC_TOOL} -T ${TARGET_NAME} -HV 2021 -all-resources-bound -Wno-ignored-attributes -Fh ${FILE_PATH}.dxil.h ${FILE_PATH} -Vn g_${VARIABLE_NAME}_dxil
-                DEPENDS ${FILE_PATH}
-        )
-        target_sources(Skate3Recomp PRIVATE ${FILE_PATH}.dxil.h)
-    endif()
-    add_custom_command(
-            OUTPUT ${FILE_PATH}.spirv.h
-            COMMAND ${DIRECTX_DXC_TOOL} -T ${TARGET_NAME} -HV 2021 -all-resources-bound -spirv -fvk-use-dx-layout ${ARGN} -Fh ${FILE_PATH}.spirv.h ${FILE_PATH} -Vn g_${VARIABLE_NAME}_spirv
-            DEPENDS ${FILE_PATH}
-    )
-    target_sources(Skate3Recomp PRIVATE ${FILE_PATH}.spirv.h)
-endfunction()
-
-function(compile_vertex_shader FILE_PATH)
-    compile_shader(${FILE_PATH} vs_6_0 -fvk-invert-y)
-endfunction()
-
-function(compile_pixel_shader FILE_PATH)
-    compile_shader(${FILE_PATH} ps_6_0)
-endfunction()
-
-compile_pixel_shader(blend_color_alpha_ps)
-compile_vertex_shader(copy_vs)
-compile_pixel_shader(copy_color_ps)
-compile_pixel_shader(copy_depth_ps)
-compile_pixel_shader(csd_filter_ps)
-compile_vertex_shader(csd_no_tex_vs)
-compile_vertex_shader(csd_vs)
-compile_pixel_shader(enhanced_motion_blur_ps)
-compile_pixel_shader(gaussian_blur_3x3)
-compile_pixel_shader(gaussian_blur_5x5)
-compile_pixel_shader(gaussian_blur_7x7)
-compile_pixel_shader(gaussian_blur_9x9)
-compile_pixel_shader(gamma_correction_ps)
-compile_pixel_shader(imgui_ps)
-compile_vertex_shader(imgui_vs)
-compile_pixel_shader(movie_ps)
-compile_vertex_shader(movie_vs)
-compile_pixel_shader(resolve_msaa_color_2x)
-compile_pixel_shader(resolve_msaa_color_4x)
-compile_pixel_shader(resolve_msaa_color_8x)
-compile_pixel_shader(resolve_msaa_depth_2x)
-compile_pixel_shader(resolve_msaa_depth_4x)
-compile_pixel_shader(resolve_msaa_depth_8x)
+#function(compile_shader FILE_PATH TARGET_NAME)
+#    set(FILE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/gpu/shader/${FILE_PATH}.hlsl)
+#    cmake_path(GET FILE_PATH STEM VARIABLE_NAME)
+#    if (SKATE3_RECOMP_D3D12)
+#        add_custom_command(
+#                OUTPUT ${FILE_PATH}.dxil.h
+#                COMMAND ${DIRECTX_DXC_TOOL} -T ${TARGET_NAME} -HV 2021 -all-resources-bound -Wno-ignored-attributes -Fh ${FILE_PATH}.dxil.h ${FILE_PATH} -Vn g_${VARIABLE_NAME}_dxil
+#                DEPENDS ${FILE_PATH}
+#        )
+#        target_sources(Skate3Recomp PRIVATE ${FILE_PATH}.dxil.h)
+#    endif()
+#    add_custom_command(
+#            OUTPUT ${FILE_PATH}.spirv.h
+#            COMMAND ${DIRECTX_DXC_TOOL} -T ${TARGET_NAME} -HV 2021 -all-resources-bound -spirv -fvk-use-dx-layout ${ARGN} -Fh ${FILE_PATH}.spirv.h ${FILE_PATH} -Vn g_${VARIABLE_NAME}_spirv
+#            DEPENDS ${FILE_PATH}
+#    )
+#    target_sources(Skate3Recomp PRIVATE ${FILE_PATH}.spirv.h)
+#endfunction()
+#
+#function(compile_vertex_shader FILE_PATH)
+#    compile_shader(${FILE_PATH} vs_6_0 -fvk-invert-y)
+#endfunction()
+#
+#function(compile_pixel_shader FILE_PATH)
+#    compile_shader(${FILE_PATH} ps_6_0)
+#endfunction()
+#
+#compile_pixel_shader(blend_color_alpha_ps)
+#compile_vertex_shader(copy_vs)
+#compile_pixel_shader(copy_color_ps)
+#compile_pixel_shader(copy_depth_ps)
+#compile_pixel_shader(csd_filter_ps)
+#compile_vertex_shader(csd_no_tex_vs)
+#compile_vertex_shader(csd_vs)
+#compile_pixel_shader(enhanced_motion_blur_ps)
+#compile_pixel_shader(gaussian_blur_3x3)
+#compile_pixel_shader(gaussian_blur_5x5)
+#compile_pixel_shader(gaussian_blur_7x7)
+#compile_pixel_shader(gaussian_blur_9x9)
+#compile_pixel_shader(gamma_correction_ps)
+#compile_pixel_shader(imgui_ps)
+#compile_vertex_shader(imgui_vs)
+#compile_pixel_shader(movie_ps)
+#compile_vertex_shader(movie_vs)
+#compile_pixel_shader(resolve_msaa_color_2x)
+#compile_pixel_shader(resolve_msaa_color_4x)
+#compile_pixel_shader(resolve_msaa_color_8x)
+#compile_pixel_shader(resolve_msaa_depth_2x)
+#compile_pixel_shader(resolve_msaa_depth_4x)
+#compile_pixel_shader(resolve_msaa_depth_8x)
 
 set(RESOURCES_SOURCE_PATH "${PROJECT_SOURCE_DIR}/../Skate3RecompResources")
 set(RESOURCES_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/res")

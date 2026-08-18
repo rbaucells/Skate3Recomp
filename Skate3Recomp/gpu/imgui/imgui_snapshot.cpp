@@ -1,5 +1,6 @@
 #include "imgui_snapshot.h"
 
+#include <algorithm>
 #include <locale/locale.h>
 #include <res/font/im_font_atlas.bin.h>
 #include <user/config.h>

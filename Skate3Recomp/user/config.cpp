@@ -1,6 +1,6 @@
 #include "config.h"
 #include <os/logger.h>
-#include <ui/game_window.h>
+// #include <ui/game_window.h>
 #include <cassert>
 #include <vector>
 #include "fmt/core.h"
@@ -755,45 +755,45 @@ std::filesystem::path Config::GetConfigPath()
     return GetUserPath() / "config.toml";
 }
 
-void Config::CreateCallbacks()
-{
-    Config::WindowSize.LockCallback = [](ConfigDef<int32_t>* def)
-    {
-        // Try matching the current window size with a known configuration.
-        if (def->Value < 0)
-            def->Value = GameWindow::FindNearestDisplayMode();
-    };
-
-    Config::WindowSize.ApplyCallback = [](ConfigDef<int32_t>* def)
-    {
-        auto displayModes = GameWindow::GetDisplayModes();
-
-        // Use largest supported resolution if overflowed.
-        if (def->Value >= displayModes.size())
-            def->Value = displayModes.size() - 1;
-
-        auto& mode = displayModes[def->Value];
-        auto centre = SDL_WINDOWPOS_CENTERED_DISPLAY(GameWindow::GetDisplay());
-
-        GameWindow::SetDimensions(mode.w, mode.h, centre, centre);
-    };
-
-    Config::Monitor.Callback = [](ConfigDef<int32_t>* def)
-    {
-        GameWindow::SetDisplay(def->Value);
-    };
-
-    Config::Fullscreen.Callback = [](ConfigDef<bool>* def)
-    {
-        GameWindow::SetFullscreen(def->Value);
-        GameWindow::SetDisplay(Config::Monitor);
-    };
-
-    Config::ResolutionScale.Callback = [](ConfigDef<float>* def)
-    {
-        def->Value = std::clamp(def->Value, 0.25f, 2.0f);
-    };
-}
+// void Config::CreateCallbacks()
+// {
+//     Config::WindowSize.LockCallback = [](ConfigDef<int32_t>* def)
+//     {
+//         // Try matching the current window size with a known configuration.
+//         if (def->Value < 0)
+//             def->Value = GameWindow::FindNearestDisplayMode();
+//     };
+//
+//     Config::WindowSize.ApplyCallback = [](ConfigDef<int32_t>* def)
+//     {
+//         auto displayModes = GameWindow::GetDisplayModes();
+//
+//         // Use largest supported resolution if overflowed.
+//         if (def->Value >= displayModes.size())
+//             def->Value = displayModes.size() - 1;
+//
+//         auto& mode = displayModes[def->Value];
+//         auto centre = SDL_WINDOWPOS_CENTERED_DISPLAY(GameWindow::GetDisplay());
+//
+//         GameWindow::SetDimensions(mode.w, mode.h, centre, centre);
+//     };
+//
+//     Config::Monitor.Callback = [](ConfigDef<int32_t>* def)
+//     {
+//         GameWindow::SetDisplay(def->Value);
+//     };
+//
+//     Config::Fullscreen.Callback = [](ConfigDef<bool>* def)
+//     {
+//         GameWindow::SetFullscreen(def->Value);
+//         GameWindow::SetDisplay(Config::Monitor);
+//     };
+//
+//     Config::ResolutionScale.Callback = [](ConfigDef<float>* def)
+//     {
+//         def->Value = std::clamp(def->Value, 0.25f, 2.0f);
+//     };
+// }
 
 void Config::Load()
 {

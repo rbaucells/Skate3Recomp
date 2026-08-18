@@ -1,13 +1,12 @@
 #include "app.h"
 // #include <api/SWA.h>
-#include <gpu/video.h>
 #include <install/installer.h>
 #include <kernel/function.h>
 #include <os/process.h>
 // #include <patches/audio_patches.h>
 // #include <patches/inspire_patches.h>
 #include <thread>
-#include <ui/game_window.h>
+// #include <ui/game_window.h>
 #include <user/config.h>
 #include <user/paths.h>
 #include <user/registry.h>
@@ -37,7 +36,7 @@ PPC_FUNC(sub_824EB490)
     App::s_isMissingDLC = !Installer::checkAllDLC(GetGamePath());
     App::s_language = Config::Language;
 
-    SWA::SGlobals::Init();
+    // SWA::SGlobals::Init();
     Registry::Save();
 
     __imp__sub_824EB490(ctx, base);
@@ -49,7 +48,7 @@ static std::thread::id g_mainThreadId = std::this_thread::get_id();
 PPC_FUNC_IMPL(__imp__sub_822C1130);
 PPC_FUNC(sub_822C1130)
 {
-    Video::WaitOnSwapChain();
+    // Video::WaitOnSwapChain();
 
     // Correct small delta time errors.
     if (Config::FPS >= FPS_MIN && Config::FPS < FPS_MAX)
@@ -69,9 +68,9 @@ PPC_FUNC(sub_822C1130)
     // for the pipelines to finish compiling in video.cpp.
     if (std::this_thread::get_id() == g_mainThreadId)
     {
-        SDL_PumpEvents();
-        SDL_FlushEvents(SDL_FIRSTEVENT, SDL_LASTEVENT);
-        GameWindow::Update();
+        // SDL_PumpEvents();
+        // SDL_FlushEvents(SDL_FIRSTEVENT, SDL_LASTEVENT);
+        // GameWindow::Update();
     }
 
     // AudioPatches::Update(App::s_deltaTime);

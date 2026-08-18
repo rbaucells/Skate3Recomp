@@ -1,7 +1,6 @@
 #pragma once
 
 #include <SDL.h>
-#include <ui/game_window.h>
 
 #define SDL_USER_EVILSONIC (SDL_USEREVENT + 1)
 

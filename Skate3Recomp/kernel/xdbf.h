@@ -1,6 +1,5 @@
 #pragma once
 
-#include <gpu/video.h>
 #include <xdbf_wrapper.h>
 
 extern XDBFWrapper g_xdbfWrapper;

@@ -1,7 +1,8 @@
 #include "achievement_manager.h"
 #include <os/logger.h>
 #include <kernel/memory.h>
-#include <ui/achievement_overlay.h>
+// #include <ui/achievement_overlay.h>
+#include <fstream>
 #include <user/config.h>
 
 #define NUM_RECORDS sizeof(AchievementManager::Data.Records) / sizeof(AchievementData::AchRecord)
@@ -64,8 +65,8 @@ void AchievementManager::Unlock(uint16_t id)
         }
     }
 
-    if (Config::AchievementNotifications)
-        AchievementOverlay::Open(id);
+    // if (Config::AchievementNotifications)
+        // AchievementOverlay::Open(id);
 }
 
 void AchievementManager::UnlockAll()

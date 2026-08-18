@@ -1,4 +1,6 @@
 #include "persistent_storage_manager.h"
+
+#include <fstream>
 #include <install/installer.h>
 #include <os/logger.h>
 #include <user/paths.h>

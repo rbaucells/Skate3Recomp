@@ -1,5 +1,8 @@
 #include "achievement_data.h"
 
+#include <cstdint>
+#include <cstring>
+
 #define NUM_RECORDS sizeof(Records) / sizeof(AchRecord)
 
 bool AchievementData::VerifySignature() const
