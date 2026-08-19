@@ -9,7 +9,7 @@
 
 #include "SDL_events.h"
 
-#define TRANSLATE_INPUT(S, X) SDL_GameControllerGetButton(controller, S) << std::countr_zero(X)
+#define TRANSLATE_INPUT(S, X) SDL_GameControllerGetButton(controller, S) << std::countr_zero(static_cast<unsigned int>(X))
 #define VIBRATION_TIMEOUT_MS 5000
 
 class Controller

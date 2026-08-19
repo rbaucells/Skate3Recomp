@@ -7,6 +7,7 @@
 // #include <patches/inspire_patches.h>
 #include <thread>
 // #include <ui/game_window.h>
+#include <SDL_events.h>
 #include <user/config.h>
 #include <user/paths.h>
 #include <user/registry.h>
@@ -28,9 +29,10 @@ void App::Exit()
     std::_Exit(0);
 }
 
-// SWA::CApplication::CApplication
-PPC_FUNC_IMPL(__imp__sub_824EB490);
-PPC_FUNC(sub_824EB490)
+// PPC_FUNC_IMPL(__imp__sub_824EB490);
+PPC_FUNC_IMPL(__imp__sub_82edfbb8);
+// PPC_FUNC(sub_824EB490)
+PPC_FUNC(sub_82edfbb8)
 {
     App::s_isInit = true;
     App::s_isMissingDLC = !Installer::checkAllDLC(GetGamePath());
@@ -39,59 +41,59 @@ PPC_FUNC(sub_824EB490)
     // SWA::SGlobals::Init();
     Registry::Save();
 
-    __imp__sub_824EB490(ctx, base);
+    // __imp__sub_824EB490(ctx, base);
+    __imp__sub_82edfbb8(ctx, base);
 }
 
 static std::thread::id g_mainThreadId = std::this_thread::get_id();
 
-// SWA::CApplication::Update
-PPC_FUNC_IMPL(__imp__sub_822C1130);
-PPC_FUNC(sub_822C1130)
-{
-    // Video::WaitOnSwapChain();
-
-    // Correct small delta time errors.
-    if (Config::FPS >= FPS_MIN && Config::FPS < FPS_MAX)
-    {
-        double targetDeltaTime = 1.0 / Config::FPS;
-
-        if (abs(ctx.f1.f64 - targetDeltaTime) < 0.00001)
-            ctx.f1.f64 = targetDeltaTime;
-    }
-
-    App::s_deltaTime = ctx.f1.f64;
-    App::s_time += App::s_deltaTime;
-
-    // This function can also be called by the loading thread,
-    // which SDL does not like. To prevent the OS from thinking
-    // the process is unresponsive, we will flush while waiting
-    // for the pipelines to finish compiling in video.cpp.
-    if (std::this_thread::get_id() == g_mainThreadId)
-    {
-        // SDL_PumpEvents();
-        // SDL_FlushEvents(SDL_FIRSTEVENT, SDL_LASTEVENT);
-        // GameWindow::Update();
-    }
-
-    // AudioPatches::Update(App::s_deltaTime);
-    // InspirePatches::Update();
-
-    // Apply subtitles option.
-    // if (auto pApplicationDocument = SWA::CApplicationDocument::GetInstance())
-    //     pApplicationDocument->m_InspireSubtitles = Config::Subtitles;
-    //
-    // if (Config::EnableEventCollisionDebugView)
-    //     *SWA::SGlobals::ms_IsTriggerRender = true;
-    //
-    // if (Config::EnableGIMipLevelDebugView)
-    //     *SWA::SGlobals::ms_VisualizeLoadedLevel = true;
-    //
-    // if (Config::EnableObjectCollisionDebugView)
-    //     *SWA::SGlobals::ms_IsObjectCollisionRender = true;
-    //
-    // if (Config::EnableStageCollisionDebugView)
-    //     *SWA::SGlobals::ms_IsCollisionRender = true;
-
-    __imp__sub_822C1130(ctx, base);
-}
+// PPC_FUNC_IMPL(__imp__sub_822C1130);
+// PPC_FUNC(sub_822C1130)
+// {
+//     // Video::WaitOnSwapChain();
+//
+//     // Correct small delta time errors.
+//     if (Config::FPS >= FPS_MIN && Config::FPS < FPS_MAX)
+//     {
+//         double targetDeltaTime = 1.0 / Config::FPS;
+//
+//         if (abs(ctx.f1.f64 - targetDeltaTime) < 0.00001)
+//             ctx.f1.f64 = targetDeltaTime;
+//     }
+//
+//     App::s_deltaTime = ctx.f1.f64;
+//     App::s_time += App::s_deltaTime;
+//
+//     // This function can also be called by the loading thread,
+//     // which SDL does not like. To prevent the OS from thinking
+//     // the process is unresponsive, we will flush while waiting
+//     // for the pipelines to finish compiling in video.cpp.
+//     if (std::this_thread::get_id() == g_mainThreadId)
+//     {
+//         SDL_PumpEvents();
+//         SDL_FlushEvents(SDL_FIRSTEVENT, SDL_LASTEVENT);
+//         // GameWindow::Update();
+//     }
+//
+//     // AudioPatches::Update(App::s_deltaTime);
+//     // InspirePatches::Update();
+//
+//     // Apply subtitles option.
+//     // if (auto pApplicationDocument = SWA::CApplicationDocument::GetInstance())
+//     //     pApplicationDocument->m_InspireSubtitles = Config::Subtitles;
+//     //
+//     // if (Config::EnableEventCollisionDebugView)
+//     //     *SWA::SGlobals::ms_IsTriggerRender = true;
+//     //
+//     // if (Config::EnableGIMipLevelDebugView)
+//     //     *SWA::SGlobals::ms_VisualizeLoadedLevel = true;
+//     //
+//     // if (Config::EnableObjectCollisionDebugView)
+//     //     *SWA::SGlobals::ms_IsObjectCollisionRender = true;
+//     //
+//     // if (Config::EnableStageCollisionDebugView)
+//     //     *SWA::SGlobals::ms_IsCollisionRender = true;
+//
+//     __imp__sub_822C1130(ctx, base);
+// }
 
