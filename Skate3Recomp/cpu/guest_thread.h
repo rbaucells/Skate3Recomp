@@ -1,6 +1,7 @@
 #pragma once
 
 #include <kernel/xdm.h>
+#include <atomic>
 
 // Use pthreads directly on macOS to be able to increase default stack size.
 #ifdef __APPLE__

@@ -3,6 +3,8 @@
 #pragma once
 
 #include <utility>
+#include <cstdint>
+#include <cstddef>
 
 extern const uint64_t Dlc5Hashes[];
 extern const std::pair<const char *, uint32_t> Dlc5Files[];

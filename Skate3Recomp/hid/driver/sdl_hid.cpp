@@ -3,9 +3,11 @@
 #include <user/config.h>
 #include <hid/hid.h>
 #include <os/logger.h>
-#include <ui/game_window.h>
+// #include <ui/game_window.h>
 #include <kernel/xdm.h>
 #include <app.h>
+
+#include "SDL_events.h"
 
 #define TRANSLATE_INPUT(S, X) SDL_GameControllerGetButton(controller, S) << std::countr_zero(X)
 #define VIBRATION_TIMEOUT_MS 5000
@@ -288,8 +290,8 @@ int HID_OnSDLEvent(void*, SDL_Event* event)
         case SDL_MOUSEBUTTONDOWN:
         case SDL_MOUSEBUTTONUP:
         {
-            if (!GameWindow::IsFullscreen() || GameWindow::s_isFullscreenCursorVisible)
-                SDL_ShowCursor(SDL_ENABLE);
+            // if (!GameWindow::IsFullscreen() || GameWindow::s_isFullscreenCursorVisible)
+                // SDL_ShowCursor(SDL_ENABLE);
 
             hid::g_inputDevice = hid::EInputDevice::Mouse;
 
@@ -308,13 +310,13 @@ int HID_OnSDLEvent(void*, SDL_Event* event)
             break;
         }
 
-        case SDL_USER_EVILSONIC:
-        {
-            for (auto& controller : g_controllers)
-                SetControllerTimeOfDayLED(controller, event->user.code);
-
-            break;
-        }
+        // case SDL_USER_EVILSONIC:
+        // {
+        //     for (auto& controller : g_controllers)
+        //         SetControllerTimeOfDayLED(controller, event->user.code);
+        //
+        //     break;
+        // }
     }
 
     return 0;

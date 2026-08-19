@@ -1,5 +1,7 @@
 #pragma once
 
+#include "xxhash.h"
+
 #define PROC_ADDRESS(libraryName, procName) \
     GetProcAddress(LoadLibrary(TEXT(libraryName)), procName)
 

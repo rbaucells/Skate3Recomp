@@ -2,13 +2,15 @@
 #include "xam.h"
 #include "xdm.h"
 #include <hid/hid.h>
-#include <ui/game_window.h>
+// #include <ui/game_window.h>
 #include <cpu/guest_thread.h>
 #include <ranges>
 #include <unordered_set>
 #include "xxHashMap.h"
 #include <user/paths.h>
 #include <SDL.h>
+
+#include "user/config.h"
 
 struct XamListener : KernelObject
 {
@@ -410,7 +412,8 @@ uint32_t XamInputGetState(uint32_t userIndex, uint32_t flags, XAMINPUT_STATE* st
 
     auto keyboardState = SDL_GetKeyboardState(NULL);
 
-    if (GameWindow::s_isFocused && !keyboardState[SDL_SCANCODE_LALT])
+    // if (GameWindow::s_isFocused && !keyboardState[SDL_SCANCODE_LALT])
+    if (!keyboardState[SDL_SCANCODE_LALT])
     {
         if (keyboardState[Config::Key_LeftStickUp])
             state->Gamepad.sThumbLY = 32767;
